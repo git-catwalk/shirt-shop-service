@@ -24,5 +24,4 @@ public class Customer {
 	private String city;
 	private String state;
 	private String zipcode;
-	private Tenant tenant;
 }
