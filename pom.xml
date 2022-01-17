@@ -13,9 +13,10 @@
   <version>0.0.1-SNAPSHOT</version>
   <name>shirt-shop-service</name>
   <description>Manages Screen Printing Business</description>
+  <packaging>war</packaging>
   <properties>
     <spring-cloud.version>2020.0.3</spring-cloud.version>
-    <java.version>11</java.version>
+    <java.version>1.8</java.version>
     <spring-boot-admin.version>2.3.1</spring-boot-admin.version>
     <sonar.host.url></sonar.host.url>
   </properties>
@@ -147,6 +148,17 @@
             </goals>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.tomcat.maven</groupId>
+        <artifactId>tomcat7-maven-plugin</artifactId>
+        <version>2.2</version>
+        <configuration>
+          <username>antsle</username>
+          <password></password>
+          <url>https://shirt-shop-service.bluntsoftware.com/manager/text</url>
+          <path>/</path>
+        </configuration>
       </plugin>
       <plugin>
         <groupId>org.springframework.boot</groupId>

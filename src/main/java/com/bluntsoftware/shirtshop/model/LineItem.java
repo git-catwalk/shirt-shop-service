@@ -14,7 +14,9 @@ import java.util.List;
 public class LineItem {
 	private String id;
 	private String description;
+	private Garment garment;
 	private String styleNumber;
+	private Integer discount;
 	private String brand;
 	private String thumbnail;
 	private String garmentColor;

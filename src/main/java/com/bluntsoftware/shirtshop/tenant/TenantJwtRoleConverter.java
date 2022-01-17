@@ -6,6 +6,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class TenantJwtRoleConverter implements Converter<Jwt, Collection<GrantedAuthority>> {
@@ -18,9 +19,13 @@ public class TenantJwtRoleConverter implements Converter<Jwt, Collection<Granted
     }
 
     public List<String> getRoles(Jwt jwt){
-        return TenantUserService.getUser(jwt.getTokenValue()).orElseThrow(()->{
-            throw new RuntimeException("Tenant User not Found");
-        }).getRoles();
+
+        Optional<TenantUser> tenantUser =  TenantUserService.getUser(jwt.getTokenValue());
+        if(tenantUser.isPresent()){
+            return tenantUser.get().getRoles();
+        }
+        throw new RuntimeException("Tenant User not Found");
+
     }
 }
 

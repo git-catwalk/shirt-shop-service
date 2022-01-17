@@ -47,8 +47,8 @@ public class CustomerService{
 
   public void importCsv(InputStream is){
 
-     try (var fileReader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
-         var csvParser = new CSVParser(fileReader,
+     try (BufferedReader fileReader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
+          CSVParser csvParser = new CSVParser(fileReader,
                  CSVFormat.Builder.create()
                          .setHeader().setSkipHeaderRecord(true)
                          .setIgnoreHeaderCase(false)
