@@ -1,5 +1,6 @@
 package com.bluntsoftware.shirtshop.config;
 
+import com.bluntsoftware.shirtshop.tenant.TenantJwtRoleConverter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,17 +11,10 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Configuration
 @EnableWebSecurity
@@ -50,23 +44,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private Converter<Jwt, ? extends AbstractAuthenticationToken> jwtAuthenticationConverter() {
         var jwtAuthenticationConverter = new JwtAuthenticationConverter();
-        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtRoleConverter());
+        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(new TenantJwtRoleConverter());
         return jwtAuthenticationConverter;
-    }
-
-    @Bean
-    Converter<Jwt, Collection<GrantedAuthority>> jwtRoleConverter(){
-        return jwt -> {
-            Map<String, Object> claims = jwt.getClaims();
-            if(!claims.containsKey("roles")) {
-                throw new RuntimeException("roles not found");
-            }
-            return  ((List<String>) claims.get("roles")).stream()
-                    .map(roleName -> "ROLE_" + roleName.replace("/","").toUpperCase())
-                    .collect(Collectors.toList()).stream()
-                    .map(SimpleGrantedAuthority::new)
-                    .collect(Collectors.toList());
-        };
     }
 
     @Bean

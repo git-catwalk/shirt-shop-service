@@ -12,10 +12,13 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class LineItem {
-
+	private String id;
 	private String description;
-	private Garment garment;
+	private String styleNumber;
+	private String brand;
+	private String thumbnail;
 	private String garmentColor;
+	private BigDecimal garmentPriceTotal;
 	private BigDecimal costEa;
 	private Integer totalColors;
 	private Integer xs;

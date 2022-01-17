@@ -9,6 +9,8 @@ import org.springframework.data.annotation.Id;
 import java.math.BigDecimal;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Data
 @NoArgsConstructor
@@ -28,4 +30,20 @@ public class Garment {
 	private String description;
 	private BigDecimal twoXCost;
 	private BigDecimal threeXCost;
+	private String catalogPageNumber;
+	private String styleNumber;
+	private String size;
+	private String casePack;
+	private Map<String, Map<String,BigDecimal>> matrix;
+	public void addCost(String size, String colorFamily, BigDecimal cost){
+		if(matrix == null){
+			matrix = new HashMap<>();
+		}
+		Map<String,BigDecimal> color = new HashMap<>();
+		if(matrix.containsKey(size)){
+			color = matrix.get(size);
+		}
+		color.put(colorFamily, cost);
+		matrix.put(size,color);
+	}
 }

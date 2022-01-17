@@ -2,10 +2,16 @@ package com.bluntsoftware.shirtshop.service;
 
 import com.bluntsoftware.shirtshop.model.Customer;
 import com.bluntsoftware.shirtshop.repository.CustomerRepo;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
 import org.springframework.stereotype.Service;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -36,7 +42,49 @@ public class CustomerService{
   }
 
   public Page<Customer> search(String term,Pageable pageable) {
-    log.info("create a filter in repo for search term {}",term);
-    return repo.findAll(pageable);
+    return repo.findAllByNameIgnoreCaseContaining(term,pageable);
   }
+
+  public void importCsv(InputStream is){
+
+     try (var fileReader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
+         var csvParser = new CSVParser(fileReader,
+                 CSVFormat.Builder.create()
+                         .setHeader().setSkipHeaderRecord(true)
+                         .setIgnoreHeaderCase(false)
+                         .setTrim(true)
+                         .build())) {
+
+            csvParser.getRecords().forEach(r-> save( Customer.builder()
+               .name(r.get("customer_name"))
+               .firstName(r.get("contact_first_name"))
+               .lastName(r.get("contact_last_name"))
+               .accountNumber(r.get("account_number"))
+               .email(r.get("email"))
+               .fax(r.get("fax"))
+               .mobile(r.get("mobile"))
+               .tollFree(r.get("toll_free"))
+               .website(r.get("website"))
+               .city(r.get("city"))
+               .state(r.get("province/state"))
+               .country(r.get("country"))
+               .street1(r.get("address_line_1"))
+               .street2(r.get("address_line_2"))
+               .zipcode(r.get("postal_code/zip_code"))
+               .shipContact(r.get("ship-to_address_line_1"))
+               .shipPhone(r.get("ship-to_phone"))
+               .shipStreet1(r.get("ship-to_address_line_1"))
+               .shipStreet2(r.get("ship-to_address_line_2"))
+               .shipCity(r.get("ship-to_city"))
+               .shipState(r.get("ship-to_province/state"))
+               .shipCountry(r.get("ship-to_country"))
+               .shipZipcode(r.get("ship-to_postal_code/zip_code"))
+               .deliveryInstructions(r.get("delivery_instructions"))
+               .build())
+        );
+    } catch (Exception e) {
+        throw new RuntimeException("Could not parse the csv file: " + e.getMessage());
+    }
+  }
+
 }

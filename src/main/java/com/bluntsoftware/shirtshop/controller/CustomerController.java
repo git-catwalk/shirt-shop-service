@@ -3,13 +3,19 @@ package com.bluntsoftware.shirtshop.controller;
 import com.bluntsoftware.shirtshop.model.Customer;
 import com.bluntsoftware.shirtshop.service.CustomerService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.MediaType;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/rest")
@@ -47,6 +53,19 @@ public class CustomerController {
   public Page<Customer> search(@RequestParam(value = "term",  defaultValue = "") String searchTerm,
                              @RequestParam(value = "page",  defaultValue = "0") Integer page,
                              @RequestParam(value = "limit", defaultValue = "50") Integer limit){
-    return this.service.search(searchTerm,PageRequest.of(page,limit));
+    if(searchTerm == null){ searchTerm = "";}
+    if(page == null){ page = 0;}
+    if(limit == null){ limit = 50;}
+    Pageable pageable = PageRequest.of(page,limit);
+
+    return this.service.search(searchTerm,pageable);
+  }
+
+  @PostMapping(value = "/customer/import")
+  public  Map<String,String> importCsv(@RequestParam("file") MultipartFile file) throws IOException {
+    Map<String,String> ret = new HashMap<>();
+    this.service.importCsv(file.getInputStream());
+    ret.put("status","success");
+    return ret;
   }
 }
