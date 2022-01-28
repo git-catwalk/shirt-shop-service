@@ -1,9 +1,9 @@
 package com.bluntsoftware.shirtshop.repository;
 
+import com.bluntsoftware.shirtshop.model.Company;
 import org.springframework.data.mongodb.repository.MongoRepository;
-import com.bluntsoftware.shirtshop.model.Defaults;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface DefaultsRepo extends MongoRepository<Defaults, String> {
+public interface CompanyRepo extends MongoRepository<Company, String> {
 }

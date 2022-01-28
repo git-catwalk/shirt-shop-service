@@ -2,6 +2,7 @@ package com.bluntsoftware.shirtshop.controller;
 
 import com.bluntsoftware.shirtshop.model.Estimate;
 import com.bluntsoftware.shirtshop.service.EstimateService;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.MediaType;
@@ -24,6 +25,7 @@ public class EstimateController {
   @PostMapping(value="/estimate",produces = MediaType.APPLICATION_JSON_VALUE)
   public Estimate save(@RequestBody Map<String,Object> dto){
     ObjectMapper mapper = new ObjectMapper();
+    mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     return this.service.save(mapper.convertValue(dto,Estimate.class));
   }
 
