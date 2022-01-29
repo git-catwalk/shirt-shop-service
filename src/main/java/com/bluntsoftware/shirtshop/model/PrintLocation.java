@@ -10,8 +10,7 @@ import lombok.Data;
 @AllArgsConstructor
 @Builder
 public class PrintLocation {
-
-	private String position;
-	private String design;
-	private Integer colors;
+	private String description;
+	private String printType;
+	private String printTypeProperty;
 }

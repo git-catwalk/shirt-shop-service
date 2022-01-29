@@ -2,6 +2,8 @@ package com.bluntsoftware.shirtshop.ss.service;
 
 import com.bluntsoftware.shirtshop.model.Garment;
 import com.bluntsoftware.shirtshop.model.GarmentColor;
+import com.bluntsoftware.shirtshop.model.GarmentVendorApi;
+import com.bluntsoftware.shirtshop.service.GarmentVendorApiService;
 import com.bluntsoftware.shirtshop.ss.model.Product;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.codec.binary.Base64;
@@ -21,9 +23,15 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 public class ProductService {
+    private final GarmentVendorApiService garmentVendorApiService;
 
-    public static void main(String[] args) {
-        ProductService service = new ProductService();
+    public ProductService(GarmentVendorApiService garmentVendorApiService) {
+        this.garmentVendorApiService = garmentVendorApiService;
+    }
+
+   /* public static void main(String[] args) {
+
+        ProductService service = new ProductService(garmentVendorApiService);
         service.findColors("39").forEach((p)->{
             System.out.println(p);
         });
@@ -34,7 +42,7 @@ public class ProductService {
             System.out.println(s);
         });
     }
-
+*/
     public List<GarmentColor> findColors(String styleId) {
         return  getProductsByStyle(styleId)
                 .stream()
@@ -73,18 +81,21 @@ public class ProductService {
     }
 
     public List<Product> getProductsByStyle(String styleId){
+        GarmentVendorApi garmentVendorApi = garmentVendorApiService.get().get();
+
         RestTemplate restTemplate = new RestTemplate();
         String customerAPIUrl =  "https://api.ssactivewear.com/v2/products/";
         UriComponents builder = UriComponentsBuilder.fromHttpUrl(customerAPIUrl)
                 .queryParam("styleId",styleId)
                 .build();
-
-        HttpEntity<List<Product>> request = new HttpEntity<>(null,createHeaders("457322","d4477011-4e8c-42ba-b4e9-022ee074afe1"));
+//"457322","d4477011-4e8c-42ba-b4e9-022ee074afe1"
+        HttpEntity<List<Product>> request = new HttpEntity<>(null,createHeaders(garmentVendorApi.getSandsCustomerKey(),garmentVendorApi.getSandsApiKey()));
         ResponseEntity<Product[]> response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, request, Product[].class );
         return Arrays.asList(response.getBody());
     }
 
     HttpHeaders createHeaders(String username, String password){
+
         return new HttpHeaders() {{
             String auth = username + ":" + password;
             byte[] encodedAuth = Base64.encodeBase64(
