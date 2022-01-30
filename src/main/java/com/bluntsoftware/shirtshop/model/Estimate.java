@@ -41,6 +41,7 @@ public class Estimate {
 	private BigDecimal totalCost;
 	private Integer numberOfShipments;
 	private BigDecimal overrideTotal;
+	private PriceProfile pricingProfile;
 	private List<LineItem> items;
 	private List<NamesNumbers> namesNumbers;
 }

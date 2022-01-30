@@ -41,4 +41,5 @@ public class Customer {
 	private String shipCountry;
 	private String shipZipcode;
 	private String deliveryInstructions;
+	private PriceProfile pricingProfile;
 }

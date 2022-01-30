@@ -17,6 +17,7 @@ public class LineItem {
 	private String description;
 	private GarmentStyle garmentStyle;
 	private GarmentColor garmentColor;
+	private Double garmentMarkupPercentage;
 	private Map<String,QtySize> sizes;
 	private List<Garment> garments;
 	private String styleNumber;
