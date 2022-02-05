@@ -49,6 +49,11 @@ public class GarmentStyleController {
    this.service.deleteById(String.valueOf(id));
   }
 
+  @DeleteMapping(value = "")
+  public void deleteAll(){
+    this.service.deleteAll();
+  }
+
   @ResponseBody
   @GetMapping(value = {"/search"}, produces = { "application/json" })
   public Page<GarmentStyle> search(@RequestParam(value = "term",  defaultValue = "") String searchTerm,

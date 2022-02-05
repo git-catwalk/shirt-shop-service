@@ -29,20 +29,6 @@ public class ProductService {
         this.garmentVendorApiService = garmentVendorApiService;
     }
 
-   /* public static void main(String[] args) {
-
-        ProductService service = new ProductService(garmentVendorApiService);
-        service.findColors("39").forEach((p)->{
-            System.out.println(p);
-        });
-        service.findGarments("39","62" ).forEach((s)->{
-            System.out.println(s);
-        });
-        service.findGarments("39","79" ).forEach((s)->{
-            System.out.println(s);
-        });
-    }
-*/
     public List<GarmentColor> findColors(String styleId) {
         return  getProductsByStyle(styleId)
                 .stream()
@@ -88,7 +74,7 @@ public class ProductService {
         UriComponents builder = UriComponentsBuilder.fromHttpUrl(customerAPIUrl)
                 .queryParam("styleId",styleId)
                 .build();
-//"457322","d4477011-4e8c-42ba-b4e9-022ee074afe1"
+
         HttpEntity<List<Product>> request = new HttpEntity<>(null,createHeaders(garmentVendorApi.getSandsCustomerKey(),garmentVendorApi.getSandsApiKey()));
         ResponseEntity<Product[]> response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, request, Product[].class );
         return Arrays.asList(response.getBody());

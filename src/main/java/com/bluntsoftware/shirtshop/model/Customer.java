@@ -42,4 +42,5 @@ public class Customer {
 	private String shipZipcode;
 	private String deliveryInstructions;
 	private PriceProfile pricingProfile;
+	private Double taxRate;
 }

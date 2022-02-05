@@ -10,9 +10,8 @@ import lombok.Data;
 @AllArgsConstructor
 @Builder
 public class NamesNumbers {
-
+	private String name;
+	private String number;
 	private String size;
-	private String description;
-	private String colors;
-	private String position;
+	private Integer qty;
 }

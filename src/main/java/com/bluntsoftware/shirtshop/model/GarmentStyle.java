@@ -4,8 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.Data;
+import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.TextScore;
 
 @Data
 @NoArgsConstructor
@@ -18,10 +20,15 @@ public class GarmentStyle {
 	String styleId;
 	String reseller;
 	String partNumber;
+	@TextIndexed(weight=3)
 	String brandName;
+	@TextIndexed(weight=5)
 	String styleName;
+	@TextIndexed
 	String title;
 	String description;
 	String brandImage;
 	String styleImage;
+	@TextScore
+	Float score;
 }

@@ -7,14 +7,17 @@ import com.bluntsoftware.shirtshop.model.GarmentColor;
 import com.bluntsoftware.shirtshop.repository.GarmentStyleRepo;
 import com.bluntsoftware.shirtshop.ss.service.ProductService;
 import com.bluntsoftware.shirtshop.ss.service.StyleService;
+import org.springframework.data.domain.*;
+import org.springframework.data.mongodb.core.query.TextCriteria;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
 @Slf4j
 @Service
@@ -23,6 +26,7 @@ public class GarmentStyleService {
   private final ProductService productService;
   private final GarmentStyleRepo repo;
   private final StyleService styleService;
+
   public GarmentStyleService(ProductService productService, GarmentStyleRepo repo, StyleService styleService) {
     this.productService = productService;
     this.repo = repo;
@@ -45,9 +49,34 @@ public class GarmentStyleService {
     return repo.findAll();
   }
 
+  public Page<GarmentStyle> fullTextSearch(String searchPhrase, Pageable pageable) {
+    Sort sort = Sort.by("score");
+    TextCriteria criteria = TextCriteria.forDefaultLanguage()
+            .caseSensitive(false)
+            .matchingAny(searchPhrase.split(" "));
+    return repo.findAllBy(criteria, PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort));
+  }
+
+  //poor man's full text search
   public Page<GarmentStyle> search(String term, Pageable pageable) {
+    String[] terms = term.split(" ");
+
+    if(terms.length > 1){
+      List<GarmentStyle> list = repo.findAllByBrandNameIgnoreCaseContainingAndTitleIgnoreCaseContaining(terms[0],terms[1]);
+      for(int x = 2;x < terms.length;x++){
+        String te = terms[x];
+        list = list.stream()
+                .filter((t)-> t.getTitle().toLowerCase(Locale.ROOT).contains(te.toLowerCase(Locale.ROOT))).collect(Collectors.toList());
+      }
+      return new PageImpl<>(list);
+    }
+
     return repo.findAllByStyleNameIgnoreCaseContainingOrTitleIgnoreCaseContainingOrBrandNameIgnoreCaseContaining
-            (term,term,term,pageable);
+            (term.trim(),term.trim(),term.trim(),pageable);
+  }
+
+  public void deleteAll(){
+    this.repo.deleteAll();
   }
 
   public List<GarmentColor> findColors(String styleId) {

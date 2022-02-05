@@ -30,4 +30,5 @@ public class LineItem {
 	private String notes;
 	private List<PrintLocation> printLocations;
 	private List<Screen> screens;
+	private List<NamesNumbers> namesNumbers;
 }

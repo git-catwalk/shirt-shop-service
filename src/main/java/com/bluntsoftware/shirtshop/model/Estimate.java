@@ -43,5 +43,5 @@ public class Estimate {
 	private BigDecimal overrideTotal;
 	private PriceProfile pricingProfile;
 	private List<LineItem> items;
-	private List<NamesNumbers> namesNumbers;
+
 }
