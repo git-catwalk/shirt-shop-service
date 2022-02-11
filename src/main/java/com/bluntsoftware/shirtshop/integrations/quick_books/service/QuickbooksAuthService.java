@@ -3,10 +3,17 @@ package com.bluntsoftware.shirtshop.integrations.quick_books.service;
 import com.bluntsoftware.shirtshop.integrations.AuthResponse;
 import com.bluntsoftware.shirtshop.integrations.Integration;
 import com.bluntsoftware.shirtshop.integrations.IntegrationService;
-import com.bluntsoftware.shirtshop.integrations.quick_books.config.QuickbooksConfig;
+import com.bluntsoftware.shirtshop.integrations.quick_books.config.QuickbooksOauthConfig;
+import com.bluntsoftware.shirtshop.integrations.quick_books.model.QBEstimate;
+import com.bluntsoftware.shirtshop.integrations.quick_books.model.QBInvoice;
 import com.bluntsoftware.shirtshop.tenant.TenantResolver;
 import org.apache.commons.codec.binary.Base64;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -18,13 +25,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class QuickbooksService {
+public class QuickbooksAuthService implements AuthService {
     private final IntegrationService integrationService;
-    private final QuickbooksConfig qbConfig;
+    private final QuickbooksOauthConfig qbConfig;
     private static final String QB_STATE = "state-387465";
     private static final String INTEGRATION_ID = "quick-books";
 
-    public QuickbooksService(IntegrationService integrationService, QuickbooksConfig qbConfig) {
+    public QuickbooksAuthService(IntegrationService integrationService, QuickbooksOauthConfig qbConfig) {
         this.integrationService = integrationService;
         this.qbConfig = qbConfig;
     }
@@ -75,6 +82,21 @@ public class QuickbooksService {
         }
     }
 
+    @Override
+    public boolean credentialsExpired() {
+        return false;
+    }
+
+    @Override
+    public void refreshCredentials() {
+
+    }
+
+    @Override
+    public boolean hasCredentials() {
+        return this.integrationService.get(INTEGRATION_ID) != null;
+    }
+
     private HttpHeaders createHeaders(String username, String password){
         return new HttpHeaders() {{
             String auth = username + ":" + password;
@@ -84,4 +106,10 @@ public class QuickbooksService {
             set( "Authorization", authHeader );
         }};
     }
+
+    public Integration getCredentials() {
+        return this.integrationService.get(INTEGRATION_ID);
+    }
+
+
 }

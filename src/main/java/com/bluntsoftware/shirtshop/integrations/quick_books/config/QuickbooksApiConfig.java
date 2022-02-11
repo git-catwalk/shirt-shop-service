@@ -8,11 +8,7 @@ import org.springframework.stereotype.Component;
 @Primary
 @Data
 @Component
-@ConfigurationProperties(prefix="qb.api.oauth2")
-public class QuickbooksConfig {
-    String tokenUrl;
-    String authUrl;
-    String clientId;
-    String clientSecret;
-    String redirectUrl;
+@ConfigurationProperties(prefix="qb.api")
+public class QuickbooksApiConfig {
+    String url;
 }

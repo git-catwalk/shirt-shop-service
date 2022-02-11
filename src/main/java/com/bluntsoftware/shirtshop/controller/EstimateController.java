@@ -51,4 +51,11 @@ public class EstimateController {
                              @RequestParam(value = "limit", defaultValue = "50") Integer limit){
     return this.service.search(searchTerm,PageRequest.of(page,limit));
   }
+
+  @GetMapping(value = "/estimate/{id}/createInvoice",produces = MediaType.APPLICATION_JSON_VALUE)
+  public void createInvoice(@PathVariable("id") String id ){
+    this.service.createInvoice(id);
+  }
+
+
 }

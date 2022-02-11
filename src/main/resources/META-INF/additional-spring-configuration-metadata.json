@@ -79,5 +79,10 @@
       "name": "qb.api.oauth2.redirect-url",
       "type": "java.lang.String",
       "description": "Description for qb.api.oauth2.redirect-url."
+    },
+    {
+      "name": "qb.api.url",
+      "type": "java.lang.String",
+      "description": "Description for qb.api.url."
     }
   ] }
