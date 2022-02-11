@@ -1,6 +1,6 @@
 package com.bluntsoftware.shirtshop.model;
 
-import com.bluntsoftware.shirtshop.ss.model.Warehouse;
+import com.bluntsoftware.shirtshop.integrations.ss_active.model.Warehouse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

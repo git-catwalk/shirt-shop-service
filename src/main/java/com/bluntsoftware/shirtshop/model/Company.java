@@ -1,6 +1,6 @@
 package com.bluntsoftware.shirtshop.model;
 
-import com.bluntsoftware.shirtshop.google.model.GoogleApi;
+import com.bluntsoftware.shirtshop.integrations.google.model.GoogleApi;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

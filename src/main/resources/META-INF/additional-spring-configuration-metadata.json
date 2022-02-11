@@ -4,5 +4,80 @@
       "name": "saasy.uri",
       "type": "java.lang.String",
       "description": "Description for saasy.uri."
-  }
-] }
+    },
+    {
+      "name": "saasy.appId",
+      "type": "java.lang.String",
+      "description": "Description for saasy.appId."
+    },
+    {
+      "name": "wave.api.oauth2.client-secret",
+      "type": "java.lang.String",
+      "description": "Description for wave.api.oauth2.client-secret."
+    },
+    {
+      "name": "wave.api.oauth2.client-id",
+      "type": "java.lang.String",
+      "description": "Description for wave.api.oauth2.client-id."
+    },
+    {
+      "name": "google.api.oauth2.token-url",
+      "type": "java.lang.String",
+      "description": "Description for google.api.oauth2.token-url."
+    },
+    {
+      "name": "google.api.oauth2.auth-url",
+      "type": "java.lang.String",
+      "description": "Description for google.api.oauth2.auth-url."
+    },
+    {
+      "name": "google.api.oauth2.client-id",
+      "type": "java.lang.String",
+      "description": "Description for google.api.oauth2.client-id."
+    },
+    {
+      "name": "google.api.oauth2.client-secret",
+      "type": "java.lang.String",
+      "description": "Description for google.api.oauth2.client-secret."
+    },
+    {
+      "name": "wave.api.oauth2.redirect-url",
+      "type": "java.lang.String",
+      "description": "Description for wave.api.oauth2.redirect-url."
+    },
+    {
+      "name": "wave.api.oauth2.token-url",
+      "type": "java.lang.String",
+      "description": "Description for wave.api.oauth2.token-url."
+    },
+    {
+      "name": "wave.api.oauth2.auth-url",
+      "type": "java.lang.String",
+      "description": "Description for wave.api.oauth2.auth-url."
+    },
+    {
+      "name": "qb.api.oauth2.token-url",
+      "type": "java.lang.String",
+      "description": "Description for qb.api.oauth2.token-url."
+    },
+    {
+      "name": "qb.api.oauth2.auth-url",
+      "type": "java.lang.String",
+      "description": "Description for qb.api.oauth2.auth-url."
+    },
+    {
+      "name": "qb.api.oauth2.client-id",
+      "type": "java.lang.String",
+      "description": "Description for qb.api.oauth2.client-id."
+    },
+    {
+      "name": "qb.api.oauth2.client-secret",
+      "type": "java.lang.String",
+      "description": "Description for qb.api.oauth2.client-secret."
+    },
+    {
+      "name": "qb.api.oauth2.redirect-url",
+      "type": "java.lang.String",
+      "description": "Description for qb.api.oauth2.redirect-url."
+    }
+  ] }

@@ -52,6 +52,11 @@
       <version>1.9.0</version>
     </dependency>
     <dependency>
+      <groupId>com.graphql-java-kickstart</groupId>
+      <artifactId>graphql-webclient-spring-boot-starter</artifactId>
+      <version>1.0.0</version>
+    </dependency>
+    <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
       <optional>true</optional>
@@ -71,6 +76,11 @@
       <groupId>com.google.apis</groupId>
       <artifactId>google-api-services-drive</artifactId>
       <version>v3-rev20220110-1.32.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-configuration-processor</artifactId>
+      <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>org.jeasy</groupId>
