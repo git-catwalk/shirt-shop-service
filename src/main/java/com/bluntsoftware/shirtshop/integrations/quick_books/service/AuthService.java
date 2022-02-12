@@ -8,6 +8,6 @@ public interface AuthService {
     Map<String,String> authUrl();
     ResponseEntity<?> token(AuthResponse auth);
     boolean credentialsExpired();
-    void refreshCredentials();
+    ResponseEntity<?> refreshCredentials();
     boolean hasCredentials();
 }

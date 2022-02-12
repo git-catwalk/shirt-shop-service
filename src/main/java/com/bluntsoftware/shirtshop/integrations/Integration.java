@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.Date;
 import java.util.Map;
 
 @Data
@@ -18,5 +19,8 @@ public class Integration {
     @Id
     private String id;
     private String tenant;
+    private String realmId;
+    private Date issued;
+    private Date expires;
     private Map<String,Object> credentials;
 }

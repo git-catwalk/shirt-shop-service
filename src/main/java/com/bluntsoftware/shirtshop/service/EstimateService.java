@@ -1,6 +1,5 @@
 package com.bluntsoftware.shirtshop.service;
 
-import com.bluntsoftware.shirtshop.integrations.quick_books.model.QBInvoice;
 import com.bluntsoftware.shirtshop.integrations.quick_books.service.QuickbooksApiService;
 import com.bluntsoftware.shirtshop.model.Estimate;
 import com.bluntsoftware.shirtshop.repository.EstimateRepo;
@@ -46,7 +45,7 @@ public class EstimateService{
   public void createInvoice(String id) {
     Estimate estimate = findById(id).orElse(null);
     if(estimate != null){
-       this.quickbooksService.createInvoice(QBInvoice.builder().id(estimate.getId()).build());
+      // this.quickbooksService.createInvoice();
     }
   }
 }

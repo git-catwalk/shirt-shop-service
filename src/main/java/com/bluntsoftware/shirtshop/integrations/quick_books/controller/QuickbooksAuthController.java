@@ -17,9 +17,11 @@ import java.util.Map;
 public class QuickbooksAuthController {
 
     private final QuickbooksAuthService quickbooksAuthService;
+    private final QuickbooksApiService quickbooksApiService;
 
-    public QuickbooksAuthController(QuickbooksAuthService quickbooksAuthService, QuickbooksApiService quickbooksService) {
+    public QuickbooksAuthController(QuickbooksAuthService quickbooksAuthService, QuickbooksApiService quickbooksService, QuickbooksApiService quickbooksApiService) {
         this.quickbooksAuthService = quickbooksAuthService;
+        this.quickbooksApiService = quickbooksApiService;
     }
 
     @GetMapping(value = "/authorizationCode",produces = MediaType.APPLICATION_JSON_VALUE)
@@ -32,4 +34,8 @@ public class QuickbooksAuthController {
         return this.quickbooksAuthService.token(auth);
     }
 
+    @GetMapping("/test")
+    public ResponseEntity<?> testApi() {
+        return this.quickbooksApiService.test();
+    }
 }

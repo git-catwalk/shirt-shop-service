@@ -3,6 +3,8 @@ package com.bluntsoftware.shirtshop.integrations.wave.service;
 import graphql.kickstart.spring.webclient.boot.GraphQLRequest;
 import graphql.kickstart.spring.webclient.boot.GraphQLResponse;
 import graphql.kickstart.spring.webclient.boot.GraphQLWebClient;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -39,5 +41,10 @@ public class WaveCustomerService {
         System.out.println(response);
         return new HashMap<>();
     }
-
+    private static HttpHeaders buildHeaders(String accessToken){
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + accessToken);
+        headers.set("Content-Type", MediaType.APPLICATION_JSON_VALUE);
+        return headers;
+    }
 }
