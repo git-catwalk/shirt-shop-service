@@ -1,6 +1,6 @@
 package com.bluntsoftware.shirtshop.integrations;
 
-import com.bluntsoftware.shirtshop.tenant.TenantResolver;
+
 import org.springframework.stereotype.Service;
 
 
@@ -13,9 +13,7 @@ public class IntegrationService {
     }
 
     public Integration get(String id){
-        Integration integration =  repo.findById(id).orElse(Integration.builder().build());
-        return integration.getTenant() != null && integration.getTenant().equalsIgnoreCase(TenantResolver.resolve()) ?
-                integration : null;
+        return repo.findById(id).orElse(Integration.builder().build());
     }
 
     public void save(Integration integration) {

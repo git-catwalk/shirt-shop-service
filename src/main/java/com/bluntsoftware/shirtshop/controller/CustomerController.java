@@ -3,6 +3,7 @@ package com.bluntsoftware.shirtshop.controller;
 import com.bluntsoftware.shirtshop.model.Customer;
 import com.bluntsoftware.shirtshop.service.CustomerService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.intuit.ipp.exception.FMSException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.MediaType;
@@ -68,4 +69,13 @@ public class CustomerController {
     ret.put("status","success");
     return ret;
   }
+
+  @PostMapping(value = "/customer/import/qb")
+  public  Map<String,String> importQuickbooks() throws FMSException {
+    Map<String,String> ret = new HashMap<>();
+    this.service.importFromQuickBooks();
+    ret.put("status","success");
+    return ret;
+  }
+
 }

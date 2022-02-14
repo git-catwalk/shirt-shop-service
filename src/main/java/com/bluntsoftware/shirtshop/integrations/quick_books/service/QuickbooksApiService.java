@@ -1,8 +1,6 @@
 package com.bluntsoftware.shirtshop.integrations.quick_books.service;
 
 import com.bluntsoftware.shirtshop.integrations.Integration;
-import com.bluntsoftware.shirtshop.integrations.quick_books.config.QuickbooksApiConfig;
-
 import com.intuit.ipp.data.Customer;
 import com.intuit.ipp.data.Estimate;
 import com.intuit.ipp.data.Invoice;
@@ -14,11 +12,10 @@ import java.util.List;
 
 @Service
 public class QuickbooksApiService {
-    private final QuickbooksApiConfig qbConfig;
+
     private final QuickbooksAuthService quickbooksAuthService;
 
-    public QuickbooksApiService(QuickbooksApiConfig qbConfig, QuickbooksAuthService quickbooksAuthService) {
-        this.qbConfig = qbConfig;
+    public QuickbooksApiService(QuickbooksAuthService quickbooksAuthService) {
         this.quickbooksAuthService = quickbooksAuthService;
     }
 
@@ -31,10 +28,9 @@ public class QuickbooksApiService {
         //System.out.println(this.getCredentials());
     }
 
-    public void saveCustomer(Customer customer) throws FMSException {
+    public Customer saveCustomer(Customer customer) throws FMSException {
         DataService ds = quickbooksAuthService.getDataService();
-        Customer s = ds.add(customer);
-        //System.out.println(this.getCredentials());
+        return ds.add(customer);
     }
 
     public Customer findCustomerById(String id) throws FMSException {

@@ -1,7 +1,10 @@
 package com.bluntsoftware.shirtshop.service;
 
+import com.bluntsoftware.shirtshop.integrations.quick_books.service.QuickbooksApiService;
+import com.bluntsoftware.shirtshop.mapper.QBMapper;
 import com.bluntsoftware.shirtshop.model.Customer;
 import com.bluntsoftware.shirtshop.repository.CustomerRepo;
+import com.intuit.ipp.exception.FMSException;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.springframework.stereotype.Service;
@@ -18,10 +21,11 @@ import org.springframework.data.domain.Pageable;
 @Slf4j
 @Service
 public class CustomerService{
-
+  private final QuickbooksApiService quickbooksService;
   private final CustomerRepo repo;
 
-  public CustomerService(CustomerRepo repo) {
+  public CustomerService(QuickbooksApiService quickbooksService, CustomerRepo repo) {
+    this.quickbooksService = quickbooksService;
     this.repo = repo;
   }
 
@@ -43,6 +47,18 @@ public class CustomerService{
 
   public Page<Customer> search(String term,Pageable pageable) {
     return repo.findAllByNameIgnoreCaseContaining(term,pageable);
+  }
+
+  public void importFromQuickBooks() throws FMSException {
+    this.quickbooksService.findAll().forEach(t->{
+      Customer customer = repo.save(QBMapper.mapCustomer(t));
+      try {
+        t.setClientEntityId(customer.getId());
+        this.quickbooksService.saveCustomer(t);
+      } catch (FMSException e) {
+        e.printStackTrace();
+      }
+    });
   }
 
   public void importCsv(InputStream is){

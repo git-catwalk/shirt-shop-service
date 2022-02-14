@@ -1,5 +1,6 @@
 package com.bluntsoftware.shirtshop.integrations;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,4 +24,5 @@ public class Integration {
     private Date issued;
     private Date expires;
     private Map<String,Object> credentials;
+    private byte[] storedCredential;
 }

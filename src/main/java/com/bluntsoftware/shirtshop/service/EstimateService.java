@@ -1,6 +1,7 @@
 package com.bluntsoftware.shirtshop.service;
 
 import com.bluntsoftware.shirtshop.integrations.quick_books.service.QuickbooksApiService;
+import com.bluntsoftware.shirtshop.mapper.QBMapper;
 import com.bluntsoftware.shirtshop.model.Estimate;
 import com.bluntsoftware.shirtshop.repository.EstimateRepo;
 import org.springframework.stereotype.Service;
@@ -40,6 +41,11 @@ public class EstimateService{
   public Page<Estimate> search(String term,Pageable pageable) {
     log.info("create a filter in repo for search term {}",term);
     return repo.findAll(pageable);
+  }
+
+  void pushToQuickbooks(String id){
+    Estimate estimate = repo.findById(id).orElse(null);
+    quickbooksService.createOrGetEstimate(QBMapper.mapEstimate(estimate));
   }
 
   public void createInvoice(String id) {
