@@ -20,6 +20,7 @@ public class Estimate {
 
 	@Id
 	private String id;
+	private Long estimateNumber;
 	private Customer customer;
 	private String description;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")

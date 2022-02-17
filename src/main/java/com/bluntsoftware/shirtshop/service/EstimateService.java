@@ -4,6 +4,7 @@ import com.bluntsoftware.shirtshop.integrations.quick_books.service.QuickbooksAp
 import com.bluntsoftware.shirtshop.mapper.QBMapper;
 import com.bluntsoftware.shirtshop.model.Estimate;
 import com.bluntsoftware.shirtshop.repository.EstimateRepo;
+import com.bluntsoftware.shirtshop.repository.SequenceRepo;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
@@ -16,13 +17,18 @@ import org.springframework.data.domain.Pageable;
 public class EstimateService{
   private final QuickbooksApiService quickbooksService;
   private final EstimateRepo repo;
-
-  public EstimateService(QuickbooksApiService quickbooksService, EstimateRepo repo) {
+  private final SequenceRepo sequenceRepo;
+  private static final String ESTIMATE_SEQUENCE_KEY = "estimate-seq-key";
+  public EstimateService(QuickbooksApiService quickbooksService, EstimateRepo repo, SequenceRepo sequenceRepo) {
     this.quickbooksService = quickbooksService;
     this.repo = repo;
+    this.sequenceRepo = sequenceRepo;
   }
 
   public  Estimate save(Estimate item) {
+    if(item.getEstimateNumber() == null){
+      item.setEstimateNumber(sequenceRepo.getNextSequenceId(ESTIMATE_SEQUENCE_KEY));
+    }
     return repo.save(item);
   }
 
