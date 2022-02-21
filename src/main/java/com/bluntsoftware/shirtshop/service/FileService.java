@@ -1,6 +1,6 @@
 package com.bluntsoftware.shirtshop.service;
 
-import com.bluntsoftware.shirtshop.integrations.google.service.GoogleDriveManager;
+import com.bluntsoftware.shirtshop.integrations.types.google.service.GoogleDriveManager;
 import com.bluntsoftware.shirtshop.model.FileItem;
 import com.bluntsoftware.shirtshop.model.FileItems;
 import com.google.api.client.http.InputStreamContent;

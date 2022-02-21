@@ -1,6 +1,6 @@
 package com.bluntsoftware.shirtshop.service;
 
-import com.bluntsoftware.shirtshop.integrations.quick_books.service.QuickbooksApiService;
+import com.bluntsoftware.shirtshop.integrations.types.quick_books.service.QuickbooksApiService;
 import com.bluntsoftware.shirtshop.mapper.QBMapper;
 import com.bluntsoftware.shirtshop.model.Customer;
 import com.bluntsoftware.shirtshop.repository.CustomerRepo;

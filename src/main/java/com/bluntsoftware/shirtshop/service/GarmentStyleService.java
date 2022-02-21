@@ -5,8 +5,8 @@ import com.bluntsoftware.shirtshop.model.GarmentStyle;
 import com.bluntsoftware.shirtshop.model.GarmentColor;
 
 import com.bluntsoftware.shirtshop.repository.GarmentStyleRepo;
-import com.bluntsoftware.shirtshop.integrations.ss_active.service.ProductService;
-import com.bluntsoftware.shirtshop.integrations.ss_active.service.StyleService;
+import com.bluntsoftware.shirtshop.integrations.types.ss_active.service.ProductService;
+import com.bluntsoftware.shirtshop.integrations.types.ss_active.service.StyleService;
 import org.springframework.data.domain.*;
 import org.springframework.data.mongodb.core.query.TextCriteria;
 import org.springframework.stereotype.Service;

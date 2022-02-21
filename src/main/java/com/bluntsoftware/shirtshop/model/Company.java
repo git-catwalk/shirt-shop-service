@@ -1,7 +1,5 @@
 package com.bluntsoftware.shirtshop.model;
 
-import com.bluntsoftware.shirtshop.integrations.google.model.GoogleApi;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -32,6 +30,4 @@ public class Company {
     private String state;
     private String country;
     private String zipcode;
-    @JsonIgnore
-    private GoogleApi googleApi;
 }
