@@ -28,7 +28,7 @@ public class GarmentStyleController {
     this.service = service;
   }
 
-  @PostMapping(value="/",produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(value="",produces = MediaType.APPLICATION_JSON_VALUE)
   public GarmentStyle save(@RequestBody Map<String,Object> dto){
     ObjectMapper mapper = new ObjectMapper();
     return this.service.save(mapper.convertValue(dto, GarmentStyle.class));
