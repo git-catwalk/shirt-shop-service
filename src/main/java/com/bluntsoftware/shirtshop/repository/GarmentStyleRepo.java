@@ -15,5 +15,5 @@ public interface GarmentStyleRepo extends MongoRepository<GarmentStyle, String> 
     GarmentStyle findByStyleIdAndReseller(String styleId, String reseller);
     Page<GarmentStyle> findAllByStyleNameIgnoreCaseContainingOrTitleIgnoreCaseContainingOrBrandNameIgnoreCaseContaining(String style, String title, String brand, Pageable pageable);
     List<GarmentStyle> findAllByBrandNameIgnoreCaseContainingAndTitleIgnoreCaseContaining(String brand, String title);
-
+    GarmentStyle findByStyleId(String styleId);
 }

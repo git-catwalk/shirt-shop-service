@@ -16,8 +16,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -42,16 +41,16 @@ public class ProductService {
                 .distinct()
                 .collect(Collectors.toList());
     }
-
-    public List<Garment> findGarments(String styleId, final String colorId) {
-        return getProductsByStyle(styleId)
+    public List<Garment> findGarments(String styleId) {
+         return getProductsByStyle(styleId)
                 .stream()
-                .filter((p)->p.getColorCode().equalsIgnoreCase(colorId))
                 .map((p)-> Garment
                         .builder()
                         .qty(p.getQty())
                         .colorName(p.getColorName())
                         .colorCode(p.getColorCode())
+                        .colorFrontImage(p.getColorFrontImage())
+                        .webColor(p.getColor1())
                         .brandName(p.getBrandName())
                         .styleId(p.getStyleId())
                         .salePrice(p.getSalePrice())
@@ -64,6 +63,10 @@ public class ProductService {
                         .sizeName(p.getSizeName())
                         .build())
                 .collect(Collectors.toList());
+    }
+
+    public List<Garment> findGarments(String styleId, final String colorId) {
+        return findGarments(styleId).stream().filter((p)->p.getColorCode().equalsIgnoreCase(colorId)).collect(Collectors.toList());
     }
 
     public List<Product> getProductsByStyle(String styleId){

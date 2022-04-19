@@ -6,7 +6,10 @@ import com.bluntsoftware.shirtshop.model.GarmentColor;
 
 import com.bluntsoftware.shirtshop.service.GarmentStyleService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.http.params.HttpParams;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.MediaType;
 import java.io.IOException;
@@ -58,11 +61,15 @@ public class GarmentStyleController {
   @GetMapping(value = {"/search"}, produces = { "application/json" })
   public Page<GarmentStyle> search(@RequestParam(value = "term",  defaultValue = "") String searchTerm,
                                    @RequestParam(value = "page",  defaultValue = "0") Integer page,
-                                   @RequestParam(value = "limit", defaultValue = "50") Integer limit){
+                                   @RequestParam(value = "limit", defaultValue = "50") Integer limit,
+                                   @RequestParam(value = "sord",required = false,defaultValue = "ASC") String sord,
+                                   @RequestParam(value = "sort",required = false) String sort){
     if(searchTerm == null){ searchTerm = "";}
     if(page == null){ page = 0;}
     if(limit == null){ limit = 50;}
-    Pageable pageable = PageRequest.of(page,limit);
+    Sort sorter = StringUtils.isEmpty(sort) ? Sort.by(Sort.Direction.fromString(sord),"brandName") : Sort.by(Sort.Direction.fromString(sord),sort);
+    Pageable pageable = PageRequest.of(page,limit,sorter);
+
     return this.service.search(searchTerm,pageable);
   }
 
@@ -73,15 +80,4 @@ public class GarmentStyleController {
     ret.put("status","success");
     return ret;
   }
-
-  @GetMapping(value = "/{styleId}/colors",produces = MediaType.APPLICATION_JSON_VALUE)
-  public List<GarmentColor> listColors(@PathVariable("styleId") String styleId){
-    return this.service.findColors(styleId);
-  }
-
-  @GetMapping(value = "/{styleId}/{colorId}/sizes",produces = MediaType.APPLICATION_JSON_VALUE)
-  public List<Garment> listGarments(@PathVariable("styleId") String styleId, @PathVariable("colorId") String colorId){
-    return this.service.findGarments(styleId,colorId);
-  }
-
 }

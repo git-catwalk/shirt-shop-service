@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -13,6 +14,8 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class Garment {
+    @Id
+    private String id;
     String sku;
     String gtin;
     String styleId;
@@ -22,6 +25,7 @@ public class Garment {
     String webColor;
     String sizeName;
     String sizeCode;
+    String colorFrontImage;
     BigDecimal piecePrice;
     BigDecimal dozenPrice;
     BigDecimal casePrice;
@@ -30,3 +34,4 @@ public class Garment {
     Integer qty;
     List<Warehouse> warehouses;
 }
+
