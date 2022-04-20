@@ -46,7 +46,7 @@ public class EstimateService{
 
   public Page<Estimate> search(String term,Pageable pageable) {
     log.info("create a filter in repo for search term {}",term);
-    return repo.findAll(pageable);
+    return repo.findAllByCustomer_NameIgnoreCaseContaining(term,pageable);
   }
 
   void pushToQuickbooks(String id){
