@@ -31,6 +31,7 @@ public class Estimate {
 	private BigDecimal inkCost;
 	private BigDecimal shirtCost;
 	private String depositUrl;
+	private String depositPercentage;
 	private BigDecimal screenCost;
 	private String paymentUrl;
 	private BigDecimal shippingCost;
