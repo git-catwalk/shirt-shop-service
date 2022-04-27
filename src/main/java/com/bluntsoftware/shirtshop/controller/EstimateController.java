@@ -1,6 +1,7 @@
 package com.bluntsoftware.shirtshop.controller;
 
 import com.bluntsoftware.shirtshop.model.Estimate;
+import com.bluntsoftware.shirtshop.model.Invoice;
 import com.bluntsoftware.shirtshop.service.EstimateService;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -53,9 +54,7 @@ public class EstimateController {
   }
 
   @GetMapping(value = "/estimate/{id}/createInvoice",produces = MediaType.APPLICATION_JSON_VALUE)
-  public void createInvoice(@PathVariable("id") String id ){
-    this.service.createInvoice(id);
+  public Invoice createInvoice(@PathVariable("id") String id ){
+    return this.service.createInvoice(id);
   }
-
-
 }

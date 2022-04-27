@@ -1,14 +1,15 @@
 package com.bluntsoftware.shirtshop.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.NoArgsConstructor;
 import lombok.Data;
-import org.springframework.data.mongodb.core.mapping.Document;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import java.util.Date;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -16,11 +17,12 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Document
-public class Estimate {
+public class Invoice {
 
 	@Id
 	private String id;
-	private Long estimateNumber;
+	private Long invoiceNumber;
+	private String estimateId;
 	private Customer customer;
 	private String description;
 	private String owner;
