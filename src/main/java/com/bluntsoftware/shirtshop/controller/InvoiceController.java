@@ -20,7 +20,7 @@ public class InvoiceController {
         this.service = service;
     }
 
-    @PostMapping(value="/",produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value="",produces = MediaType.APPLICATION_JSON_VALUE)
     public Invoice save(@RequestBody Map<String,Object> dto){
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -32,7 +32,7 @@ public class InvoiceController {
         return this.service.findById(String.valueOf(id));
     }
 
-    @GetMapping(value = "/",produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "",produces = MediaType.APPLICATION_JSON_VALUE)
     public Iterable<Invoice> findAll(){
         return this.service.findAll();
     }

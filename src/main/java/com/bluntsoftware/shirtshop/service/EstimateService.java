@@ -108,6 +108,8 @@ public class EstimateService{
     return Invoice.builder()
             .estimateId(estimate.getId())
             .customer(estimate.getCustomer())
+            .pricingProfile(estimate.getPricingProfile())
+            .dateDue(estimate.getDateDue())
             .items(estimate.getItems())
             .build();
   }
