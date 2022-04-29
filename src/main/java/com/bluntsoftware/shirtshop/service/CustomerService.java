@@ -13,6 +13,7 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.Date;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -30,6 +31,10 @@ public class CustomerService{
   }
 
   public  Customer save(Customer item) {
+    if(item.getCreated() == null){
+      item.setCreated(new Date());
+    }
+    item.setModified(new Date());
     return repo.save(item);
   }
 

@@ -39,6 +39,11 @@ public class EstimateService{
   }
 
   public  Estimate save(Estimate item) {
+    if(item.getCreated() == null){
+      item.setCreated(new Date());
+    }
+    item.setModified(new Date());
+
     if(item.getEstimateNumber() == null){
 
       if(TenantUserService.getUser().isPresent()){

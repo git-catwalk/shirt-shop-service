@@ -22,6 +22,10 @@ public class Invoice {
 	@Id
 	private String id;
 	private Long invoiceNumber;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")
+	private Date created;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")
+	private Date modified;
 	private String estimateId;
 	private Customer customer;
 	private String description;

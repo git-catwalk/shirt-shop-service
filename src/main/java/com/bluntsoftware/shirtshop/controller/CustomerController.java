@@ -4,7 +4,9 @@ import com.bluntsoftware.shirtshop.model.Customer;
 import com.bluntsoftware.shirtshop.service.CustomerService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.intuit.ipp.exception.FMSException;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.MediaType;
 
@@ -53,12 +55,14 @@ public class CustomerController {
   @GetMapping(value = {"/customer/search"}, produces = { "application/json" })
   public Page<Customer> search(@RequestParam(value = "term",  defaultValue = "") String searchTerm,
                              @RequestParam(value = "page",  defaultValue = "0") Integer page,
-                             @RequestParam(value = "limit", defaultValue = "50") Integer limit){
+                             @RequestParam(value = "limit", defaultValue = "50") Integer limit,
+                             @RequestParam(value = "sord",required = false,defaultValue = "ASC") String sord,
+                             @RequestParam(value = "sort",required = false) String sort){
     if(searchTerm == null){ searchTerm = "";}
     if(page == null){ page = 0;}
     if(limit == null){ limit = 50;}
-    Pageable pageable = PageRequest.of(page,limit);
-
+    Sort sorter = StringUtils.isEmpty(sort) ? Sort.unsorted() : Sort.by(Sort.Direction.fromString(sord),sort);
+    Pageable pageable = PageRequest.of(page,limit,sorter);
     return this.service.search(searchTerm,pageable);
   }
 

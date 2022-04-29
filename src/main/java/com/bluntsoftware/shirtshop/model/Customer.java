@@ -1,11 +1,14 @@
 package com.bluntsoftware.shirtshop.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.annotation.Id;
+
+import java.util.Date;
 
 @Data
 @NoArgsConstructor
@@ -43,4 +46,8 @@ public class Customer {
 	private String deliveryInstructions;
 	private PriceProfile pricingProfile;
 	private Double taxRate;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")
+	private Date created;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")
+	private Date modified;
 }

@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.Optional;
 
 @Slf4j
@@ -23,6 +24,10 @@ public class InvoiceService {
         this.sequenceRepo = sequenceRepo;
     }
     public Invoice save(Invoice item) {
+        if(item.getCreated() == null){
+            item.setCreated(new Date());
+        }
+        item.setModified(new Date());
         if(item.getInvoiceNumber() == null){
             item.setInvoiceNumber(sequenceRepo.getNextSequenceId(INVOICE_SEQUENCE_KEY));
         }

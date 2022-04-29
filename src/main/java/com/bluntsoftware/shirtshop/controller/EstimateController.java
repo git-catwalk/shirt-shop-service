@@ -5,6 +5,8 @@ import com.bluntsoftware.shirtshop.model.Invoice;
 import com.bluntsoftware.shirtshop.service.EstimateService;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.MediaType;
 import java.util.Map;
@@ -49,8 +51,14 @@ public class EstimateController {
   @GetMapping(value = {"/estimate/search"}, produces = { "application/json" })
   public Page<Estimate> search(@RequestParam(value = "term",  defaultValue = "") String searchTerm,
                              @RequestParam(value = "page",  defaultValue = "0") Integer page,
-                             @RequestParam(value = "limit", defaultValue = "50") Integer limit){
-    return this.service.search(searchTerm,PageRequest.of(page,limit));
+                             @RequestParam(value = "limit", defaultValue = "50") Integer limit,
+                             @RequestParam(value = "sord",required = false,defaultValue = "ASC") String sord,
+                             @RequestParam(value = "sort",required = false) String sort){
+
+
+    Sort sorter = StringUtils.isEmpty(sort) ? Sort.unsorted() : Sort.by(Sort.Direction.fromString(sord),sort);
+
+    return this.service.search(searchTerm,PageRequest.of(page,limit,sorter));
   }
 
   @GetMapping(value = "/estimate/{id}/createInvoice",produces = MediaType.APPLICATION_JSON_VALUE)
