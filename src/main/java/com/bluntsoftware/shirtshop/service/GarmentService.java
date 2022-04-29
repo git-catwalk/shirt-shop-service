@@ -65,14 +65,14 @@ public class GarmentService {
                 .collect(Collectors.toList());
     }
 
-    public List<Garment> findGarmentsByStyleId(String styleId) {
-        GarmentStyle gs = this.garmentStyleRepo.findByStyleId(styleId);
+    public List<Garment> findGarmentsByStyleId(String id) {
+        GarmentStyle gs = this.garmentStyleRepo.findById(id).get();
         String reseller = gs.getReseller();
         if(reseller != null && reseller.equalsIgnoreCase("S&SActiveWear")){
             //Call S&S Api
-            return this.productService.findGarments(styleId);
+            return this.productService.findGarments(gs.getStyleId());
         }
-        return garmentRepo.findAllByStyleId(styleId);
+        return garmentRepo.findAllByStyleId(id);
     }
 
     public List<Garment> findGarmentsByStyleIdAndColorId(String styleId, String colorId) {

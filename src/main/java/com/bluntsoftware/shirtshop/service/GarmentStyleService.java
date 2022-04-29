@@ -71,8 +71,10 @@ public class GarmentStyleService {
       return new PageImpl<>(list);
     }
 
-    return repo.findAllByStyleNameIgnoreCaseContainingOrTitleIgnoreCaseContainingOrBrandNameIgnoreCaseContaining
+    Page<GarmentStyle> ret = repo.findAllByStyleNameIgnoreCaseContainingOrTitleIgnoreCaseContainingOrBrandNameIgnoreCaseContaining
             (term.trim(),term.trim(),term.trim(),pageable);
+
+    return ret;
   }
 
   public void deleteAll(){
