@@ -14,6 +14,7 @@ public class JobCard {
     String invoiceId;
     String name;
     String description;
+    Customer customer;
     LineItem lineItem;
     PrintLocation printLocation;
     List<String> labels;

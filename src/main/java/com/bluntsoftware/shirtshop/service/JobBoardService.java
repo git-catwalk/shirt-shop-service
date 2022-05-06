@@ -20,8 +20,9 @@ public class JobBoardService {
 
     JobCard getJobCard(Invoice ord,LineItem li,PrintLocation pl){
         return JobCard.builder()
+                .customer(ord.getCustomer())
                 .description(li.getDescription())
-                .name(li.getStyleNumber() + "-" + li.getBrand() + " - " + li.getGarmentColor().getName())
+                .name(li.getGarmentStyle().getTitle() + " - " + li.getGarmentColor().getName())
                 .invoiceId(ord.getId())
                 .lineItem(li)
                 .printLocation(pl)
@@ -38,13 +39,22 @@ public class JobBoardService {
         });
         return ret.get();
     }
-
-    public JobBoard get(){
+    public boolean isInteger( String input ) {
+        try {
+            Integer.parseInt( input );
+            return true;
+        }
+        catch( NumberFormatException e ) {
+            return false;
+        }
+    }
+    public JobBoard search(String searchTerm){
+        Integer orderNumber = isInteger(searchTerm) ? Integer.parseInt( searchTerm ) : null;
         List<JobCard> orderGarments = new ArrayList<>();
         List<JobCard> prepress = new ArrayList<>();
         List<JobCard> production = new ArrayList<>();
         List<JobCard> delivery = new ArrayList<>();
-        this.repo.findAll().forEach(ord-> ord.getItems().forEach(li->{
+        this.repo.findAllByCustomer_NameIgnoreCaseContainingOrStatusIgnoreCaseContainingOrInvoiceNumber(searchTerm,searchTerm,orderNumber).forEach(ord-> ord.getItems().forEach(li->{
            if(li.getReceivedDate() == null){
                orderGarments.add(getJobCard(ord,li,null));
            }
