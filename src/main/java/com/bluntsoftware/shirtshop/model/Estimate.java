@@ -33,21 +33,10 @@ public class Estimate {
 	private String status;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")
 	private Date orderDate;
-	private BigDecimal inkCost;
-	private BigDecimal shirtCost;
 	private String depositUrl;
 	private String depositPercentage;
-	private BigDecimal screenCost;
-	private String paymentUrl;
-	private BigDecimal shippingCost;
-	private BigDecimal materialMarkup;
-	private BigDecimal totalAmount;
-	private BigDecimal laborCost;
 	private BigDecimal depositAmount;
-	private BigDecimal laborMarkup;
-	private BigDecimal totalCost;
-	private Integer numberOfShipments;
-	private BigDecimal overrideTotal;
+	private String paymentUrl;
 	private PriceProfile pricingProfile;
 	private List<LineItem> items;
 

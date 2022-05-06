@@ -10,7 +10,6 @@ import lombok.Data;
 @AllArgsConstructor
 @Builder
 public class Screen {
-
 	private String description;
 	private Integer mesh;
 }

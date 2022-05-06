@@ -54,10 +54,7 @@ public class EstimateController {
                              @RequestParam(value = "limit", defaultValue = "50") Integer limit,
                              @RequestParam(value = "sord",required = false,defaultValue = "ASC") String sord,
                              @RequestParam(value = "sort",required = false) String sort){
-
-
     Sort sorter = StringUtils.isEmpty(sort) ? Sort.unsorted() : Sort.by(Sort.Direction.fromString(sord),sort);
-
     return this.service.search(searchTerm,PageRequest.of(page,limit,sorter));
   }
 

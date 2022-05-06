@@ -1,10 +1,13 @@
 package com.bluntsoftware.shirtshop.model;
 
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.Data;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -28,6 +31,11 @@ public class LineItem {
 	private BigDecimal costEa;
 	private Integer totalColors;
 	private String notes;
+	//Garment ordering
+	private Date orderedDate;
+	private Date estimatedDeliveryDate;
+	private Date receivedDate;
+
 	private List<PrintLocation> printLocations;
 	private List<Screen> screens;
 	private List<NamesNumbers> namesNumbers;
