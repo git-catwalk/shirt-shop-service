@@ -30,7 +30,6 @@ public class Invoice {
 	private Customer customer;
 	private String description;
 	private String owner;
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")
 	private Date dateDue;
 	private String status;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")
