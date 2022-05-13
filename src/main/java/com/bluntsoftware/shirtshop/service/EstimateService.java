@@ -25,16 +25,16 @@ public class EstimateService{
   private final EstimateRepo repo;
   private final SequenceRepo sequenceRepo;
   private final InvoiceService invoiceService;
-  private final AuditTrailRepo auditTrailRepo;
+  private final AuditTrailService auditTrailService;
 
   private static final String ESTIMATE_SEQUENCE_KEY = "estimate-seq-key";
 
-  public EstimateService(QuickbooksApiService quickbooksService, EstimateRepo repo, SequenceRepo sequenceRepo, InvoiceService invoiceService, AuditTrailRepo auditTrailRepo ) {
+  public EstimateService(QuickbooksApiService quickbooksService, EstimateRepo repo, SequenceRepo sequenceRepo, InvoiceService invoiceService, AuditTrailService auditTrailService ) {
     this.quickbooksService = quickbooksService;
     this.repo = repo;
     this.sequenceRepo = sequenceRepo;
     this.invoiceService = invoiceService;
-    this.auditTrailRepo = auditTrailRepo;
+    this.auditTrailService = auditTrailService;
 
   }
 
@@ -53,13 +53,8 @@ public class EstimateService{
       item.setEstimateNumber(estimateNumber);
 
       Estimate estimate =  repo.save(item);
-      AuditTrail auditTrail = AuditTrail.builder()
-              .what(" created a new Estimate " + "EST-" + estimateNumber +  "for " + item.getCustomer().getName())
-              .estimateId(estimate.getId())
-              .when(new Date())
-              .who(TenantUserService.getUser().get().getName())
-              .build();
-      auditTrailRepo.save(auditTrail);
+      auditTrailService.audit(" created a new Estimate " + "EST-" + estimateNumber +  "for " + item.getCustomer().getName(),estimate.getId());
+
       return estimate;
     }
     return repo.save(item);
@@ -93,15 +88,7 @@ public class EstimateService{
       // todo: has an invoice already been created ?
       Invoice invoice = convertToInvoice(estimate);
       invoice = invoiceService.save(invoice);
-      AuditTrail auditTrail = AuditTrail.builder()
-              .what(" created a new Invoice from estimate " + "EST-" + estimate.getEstimateNumber() +  "for " + estimate.getCustomer().getName())
-              .invoiceId(invoice.getId())
-              .estimateId(estimate.getId())
-              .when(new Date())
-              .who(TenantUserService.getUser().get().getName())
-              .build();
-      auditTrailRepo.save(auditTrail);
-
+      auditTrailService.audit(" created a new Invoice from estimate " + "EST-" + estimate.getEstimateNumber() +  "for " + estimate.getCustomer().getName(),invoice.getId());
       //lock the estimate
       return invoice;
     }

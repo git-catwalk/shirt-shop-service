@@ -33,7 +33,9 @@ public class LineItem {
 	private Date orderedDate;
 	private Date estimatedDeliveryDate;
 	private Date receivedDate;
-
+	//line item Delivery
+	private Date deliveryDate;
+	private Date deliveryReceivedDate;
 	private List<PrintLocation> printLocations;
 	private List<Screen> screens;
 	private List<NamesNumbers> namesNumbers;

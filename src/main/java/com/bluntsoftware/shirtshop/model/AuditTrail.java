@@ -19,7 +19,6 @@ public class AuditTrail {
     private String id;
     private String who;
     private String what;
+    private String where;
     private Date when;
-    private String estimateId;
-    private String invoiceId;
 }

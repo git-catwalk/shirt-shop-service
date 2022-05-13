@@ -31,7 +31,10 @@ public class InvoiceService {
         if(item.getInvoiceNumber() == null){
             item.setInvoiceNumber(sequenceRepo.getNextSequenceId(INVOICE_SEQUENCE_KEY));
         }
-        return repo.save(item);
+        Invoice ord = repo.save(item);
+        String orderStatus = LineItemService.orderStatus(ord);
+        ord.setStatus(orderStatus);
+        return repo.save(ord);
     }
 
     public void deleteById(String id) {

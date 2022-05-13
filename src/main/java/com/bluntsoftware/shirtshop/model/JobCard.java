@@ -20,6 +20,6 @@ public class JobCard {
     Customer customer;
     LineItem lineItem;
     PrintLocation printLocation;
-    List<String> labels;
+    List<Label> labels;
     Date dueDate;
 }
