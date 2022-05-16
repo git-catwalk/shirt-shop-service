@@ -39,6 +39,7 @@ public class JobBoardService {
         });
         return ret.get();
     }
+
     public boolean isInteger( String input ) {
         try {
             Integer.parseInt( input );
@@ -59,7 +60,7 @@ public class JobBoardService {
                orderGarments.add(getJobCard(ord,li,null));
            }
 
-           if(li.getReceivedDate() != null && productionComplete(li)){
+           if(li.getReceivedDate() != null && productionComplete(li) && li.getDeliveryReceivedDate() == null){
                delivery.add( getJobCard(ord,li,null));
            }
 

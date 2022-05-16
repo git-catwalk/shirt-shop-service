@@ -85,8 +85,12 @@ public class LineItemService {
             return "In Production";
         }else if(statuses.contains("Production Completed")){
             return "Ready for Delivery";
-        }else {
-            return "Ready for Delivery";
+        }else if(statuses.contains("Delivered")){
+            return "Out for Delivery";
+        }else if(statuses.contains("Complete")){
+            return "Order Complete";
+        }else{
+            return "Status Unknown";
         }
     }
 
