@@ -39,5 +39,6 @@ public class Invoice {
 	private BigDecimal depositAmount;
 	private String paymentUrl;
 	private PriceProfile pricingProfile;
+	private List<Label> tags;
 	private List<LineItem> items;
 }

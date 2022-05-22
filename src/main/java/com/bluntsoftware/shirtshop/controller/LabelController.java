@@ -14,19 +14,19 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 import java.util.Optional;
 
-@RestController("/rest/label")
+@RestController
+@RequestMapping("/rest/label")
 public class LabelController {
 
     private final LabelService service;
-
-    public LabelController(LabelService service) {
+    private final ObjectMapper mapper;
+    public LabelController(LabelService service, ObjectMapper mapper) {
         this.service = service;
+        this.mapper = mapper;
     }
-
 
     @PostMapping(value="",produces = MediaType.APPLICATION_JSON_VALUE)
     public Label save(@RequestBody Map<String,Object> dto){
-        ObjectMapper mapper = new ObjectMapper();
         return this.service.save(mapper.convertValue(dto, Label.class));
     }
 

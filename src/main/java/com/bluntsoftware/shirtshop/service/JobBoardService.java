@@ -19,11 +19,15 @@ public class JobBoardService {
     }
 
     JobCard getJobCard(Invoice ord,LineItem li,PrintLocation pl){
+        String style = li.getGarmentStyle() != null ? li.getGarmentStyle().getTitle() : "Style missing";
+        String color = li.getGarmentColor() != null ? li.getGarmentColor().getName() : "Color missing";
+
         return JobCard.builder()
                 .customer(ord.getCustomer())
                 .description(li.getDescription())
-                .name(li.getGarmentStyle().getTitle() + " - " + li.getGarmentColor().getName())
+                .name(style + " - " + color)
                 .invoiceId(ord.getId())
+                .tags(ord.getTags())
                 .lineItem(li)
                 .printLocation(pl)
                 .dueDate(ord.getDateDue())

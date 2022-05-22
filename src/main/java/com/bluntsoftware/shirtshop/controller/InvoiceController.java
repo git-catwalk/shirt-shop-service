@@ -17,15 +17,14 @@ import java.util.Optional;
 @RequestMapping("/rest/invoice")
 public class InvoiceController {
     private final InvoiceService service;
-
-    public InvoiceController(InvoiceService service) {
+    private final ObjectMapper mapper;
+    public InvoiceController(InvoiceService service, ObjectMapper mapper) {
         this.service = service;
+        this.mapper = mapper;
     }
 
     @PostMapping(value="",produces = MediaType.APPLICATION_JSON_VALUE)
     public Invoice save(@RequestBody Map<String,Object> dto){
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         return this.service.save(mapper.convertValue(dto, Invoice.class));
     }
 
