@@ -9,6 +9,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.TextScore;
 
+import java.math.BigDecimal;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -29,6 +31,7 @@ public class GarmentStyle {
 	String description;
 	String brandImage;
 	String styleImage;
+	BigDecimal estPrice;
 	@TextScore
 	Float score;
 }

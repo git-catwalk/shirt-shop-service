@@ -7,6 +7,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import com.bluntsoftware.shirtshop.model.GarmentStyle;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Repository
@@ -16,4 +17,5 @@ public interface GarmentStyleRepo extends MongoRepository<GarmentStyle, String> 
     Page<GarmentStyle> findAllByStyleNameIgnoreCaseContainingOrTitleIgnoreCaseContainingOrBrandNameIgnoreCaseContaining(String style, String title, String brand, Pageable pageable);
     List<GarmentStyle> findAllByBrandNameIgnoreCaseContainingAndTitleIgnoreCaseContaining(String brand, String title);
     GarmentStyle findByStyleId(String styleId);
+    List<GarmentStyle> findAllByEstPrice(BigDecimal bigDecimal,Pageable pageable);
 }

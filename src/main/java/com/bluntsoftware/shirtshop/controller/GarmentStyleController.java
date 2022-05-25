@@ -1,20 +1,22 @@
 package com.bluntsoftware.shirtshop.controller;
 
-import com.bluntsoftware.shirtshop.model.Garment;
-import com.bluntsoftware.shirtshop.model.GarmentStyle;
-import com.bluntsoftware.shirtshop.model.GarmentColor;
 
+import com.bluntsoftware.shirtshop.model.GarmentStyle;
+
+
+import com.bluntsoftware.shirtshop.service.EstimateService;
 import com.bluntsoftware.shirtshop.service.GarmentStyleService;
+import com.bluntsoftware.shirtshop.service.InvoiceService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.params.HttpParams;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.MediaType;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
+
 import java.util.Map;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -26,9 +28,12 @@ import org.springframework.web.multipart.MultipartFile;
 public class GarmentStyleController {
 
   private final GarmentStyleService service;
-
-  public GarmentStyleController(GarmentStyleService service) {
+private final InvoiceService invoiceService;
+private final EstimateService estimateService;
+  public GarmentStyleController(GarmentStyleService service, InvoiceService invoiceService, EstimateService estimateService) {
     this.service = service;
+    this.invoiceService = invoiceService;
+    this.estimateService = estimateService;
   }
 
   @PostMapping(value="",produces = MediaType.APPLICATION_JSON_VALUE)
@@ -40,6 +45,12 @@ public class GarmentStyleController {
   @GetMapping(value = "/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
   public Optional<GarmentStyle> findById(@PathVariable("id") String id ){
     return this.service.findById(String.valueOf(id));
+  }
+
+  @GetMapping(value = "/priceStyles")
+  public void priceGarmentStyles(){
+     estimateService.updatePricing();
+     invoiceService.updatePricing();
   }
 
   @GetMapping(value = "",produces = MediaType.APPLICATION_JSON_VALUE)

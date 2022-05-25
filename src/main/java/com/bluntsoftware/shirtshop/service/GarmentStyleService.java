@@ -1,5 +1,6 @@
 package com.bluntsoftware.shirtshop.service;
 
+import com.bluntsoftware.shirtshop.integrations.types.ss_active.model.Style;
 import com.bluntsoftware.shirtshop.model.Garment;
 import com.bluntsoftware.shirtshop.model.GarmentStyle;
 import com.bluntsoftware.shirtshop.model.GarmentColor;
@@ -12,6 +13,7 @@ import org.springframework.data.mongodb.core.query.TextCriteria;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -57,7 +59,7 @@ public class GarmentStyleService {
     return repo.findAllBy(criteria, PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort));
   }
 
-  //poor man's full text search
+  //alt full text search
   public Page<GarmentStyle> search(String term, Pageable pageable) {
     String[] terms = term.split(" ");
 
@@ -90,7 +92,42 @@ public class GarmentStyleService {
   }
 
   public void importSSCsv(InputStream inputStream) {
-    this.styleService.importSSCsv(inputStream).forEach((s)->{
+    importStyles(this.styleService.importSSCsv(inputStream));
+  }
+
+  public void updatePricing(){
+
+
+    //List<GarmentStyle> styles =this.repo.findAllByEstPrice(null,PageRequest.of(0,15));
+    //if(styles.size() > 0){
+     // styles.forEach(this::updatePricing);
+    //}
+  }
+
+  public GarmentStyle updatePricing(GarmentStyle style){
+    try {
+      style.setEstPrice(estimatedGarmentStylePrice(style));
+      style =  this.repo.save(style);
+      System.out.println("Pricing Updated for " + style.getTitle());
+    }catch (Exception e){
+      System.out.println("Error " + e.getMessage());
+      style.setEstPrice(BigDecimal.valueOf(100));
+      style =  this.repo.save(style);
+    }
+    return style;
+  }
+
+  public BigDecimal estimatedGarmentStylePrice(GarmentStyle garmentStyle){
+    String colorId = findColors(garmentStyle.getStyleId()).get(0).getColorId();
+    return findGarments(garmentStyle.getStyleId(),colorId).get(0).getSalePrice();
+  }
+
+  public void importFromSSApi() {
+    importStyles(this.styleService.getStyles());
+  }
+
+  void importStyles(List<Style> styles){
+    styles.forEach((s)->{
       GarmentStyle current = repo.findByStyleIdAndReseller(s.getStyleId(),"S&SActiveWear");
       GarmentStyle gs = GarmentStyle.builder()
               .reseller("S&SActiveWear")
