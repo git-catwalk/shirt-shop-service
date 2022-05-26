@@ -53,6 +53,11 @@ private final EstimateService estimateService;
      invoiceService.updatePricing();
   }
 
+  @GetMapping(value = "/importFromApi")
+  public void importFromSSApi(){
+     this.service.importFromSSApi();
+  }
+
   @GetMapping(value = "",produces = MediaType.APPLICATION_JSON_VALUE)
   public Iterable<GarmentStyle> findAll(){
     return this.service.findAll();
@@ -91,4 +96,7 @@ private final EstimateService estimateService;
     ret.put("status","success");
     return ret;
   }
+
+
+
 }

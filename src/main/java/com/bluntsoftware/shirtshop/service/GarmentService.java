@@ -50,7 +50,6 @@ public class GarmentService {
                 Garment.builder()
                         .styleId(searchTerm)
                         .build());
-
         return garmentRepo.findAll(exampleGarment,of);
     }
 
@@ -66,7 +65,10 @@ public class GarmentService {
     }
 
     public List<Garment> findGarmentsByStyleId(String id) {
-        GarmentStyle gs = this.garmentStyleRepo.findById(id).get();
+        GarmentStyle gs = this.garmentStyleRepo.findByStyleId(id);
+        if(gs == null){
+            gs = this.garmentStyleRepo.findById(id).get();
+        }
         String reseller = gs.getReseller();
         if(reseller != null && reseller.equalsIgnoreCase("S&SActiveWear")){
             //Call S&S Api

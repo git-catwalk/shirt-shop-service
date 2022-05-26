@@ -14,7 +14,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document
 public class Style {
     @Id
-    String styleId;
+    String styleID;
     String reseller;
     String partNumber;
     String brandName;

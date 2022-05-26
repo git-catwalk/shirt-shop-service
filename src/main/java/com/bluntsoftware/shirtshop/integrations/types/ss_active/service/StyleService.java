@@ -54,7 +54,7 @@ public class StyleService {
             csvParser.getRecords().forEach(r-> {
                 Style style = Style.builder()
                             .reseller("S&SActiveWear")
-                            .styleId(r.get("styleID"))
+                            .styleID(r.get("styleID"))
                             .partNumber(r.get("partNumber"))
                             .brandName(r.get("brandName"))
                             .styleName(r.get("styleName"))

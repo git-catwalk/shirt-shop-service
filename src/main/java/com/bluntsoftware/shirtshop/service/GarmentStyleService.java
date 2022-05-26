@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -127,24 +128,32 @@ public class GarmentStyleService {
   }
 
   void importStyles(List<Style> styles){
-    styles.forEach((s)->{
-      GarmentStyle current = repo.findByStyleIdAndReseller(s.getStyleId(),"S&SActiveWear");
-      GarmentStyle gs = GarmentStyle.builder()
-              .reseller("S&SActiveWear")
-              .brandImage(s.getBrandImage())
-              .styleName(s.getStyleName())
-              .styleId(s.getStyleId())
-              .description(s.getDescription())
-              .title(s.getTitle())
-              .partNumber(s.getPartNumber())
-              .brandName(s.getBrandName())
-              .styleImage(s.getStyleImage())
-              .brandImage(s.getBrandImage())
-              .build();
-      if(current != null){
-        gs.setId(current.getId());
+    List<GarmentStyle> garmentStyles = new ArrayList<>();
+    for(Style s:styles){
+      GarmentStyle current = repo.findByStyleIdAndReseller(s.getStyleID(),"S&SActiveWear");
+      try {
+        GarmentStyle gs = GarmentStyle.builder()
+                .reseller("S&SActiveWear")
+                .brandImage(s.getBrandImage())
+                .styleName(s.getStyleName())
+                .styleId(s.getStyleID())
+                .id(s.getStyleID())
+                .description(s.getDescription())
+                .title(s.getTitle())
+                .partNumber(s.getPartNumber())
+                .brandName(s.getBrandName())
+                .styleImage(s.getStyleImage())
+                .brandImage(s.getBrandImage())
+                .build();
+        if (current != null) {
+          gs.setId(current.getId());
+        }
+        System.out.println("Saving " + gs.getTitle());
+        garmentStyles.add(gs);
+      }catch (Exception e){
+        System.out.println(e.getMessage());
       }
-      repo.save(gs);
-    });
+    }
+    this.repo.saveAll(garmentStyles);
   }
 }

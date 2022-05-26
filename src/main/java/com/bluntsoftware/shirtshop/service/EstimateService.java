@@ -108,6 +108,10 @@ public class EstimateService{
       Optional<QtySize> qtySize =i.getSizes().values().stream().findFirst();
       if(qtySize.isPresent() && qtySize.get().getCustomerPrice() != null){
         BigDecimal avgCost = qtySize.get().getCustomerPrice();
+        GarmentStyle current = garmentStyleRepo.findByStyleIdAndReseller(gs.getStyleId(),gs.getReseller());
+        if(current != null){
+          gs = current;
+        }
         gs.setEstPrice(avgCost);
         garmentStyleRepo.save(gs);
       }
