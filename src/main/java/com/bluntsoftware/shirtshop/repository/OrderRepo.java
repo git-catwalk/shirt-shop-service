@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface InvoiceRepo extends MongoRepository<Invoice, String> {
+public interface OrderRepo extends MongoRepository<Invoice, String> {
     Page<Invoice> findAllByCustomer_NameIgnoreCaseContaining(String term, Pageable pageable);
     List<Invoice>  findAllByCustomer_NameIgnoreCaseContainingOrStatusIgnoreCaseContainingOrInvoiceNumber(String customer,String status,Integer invNum);
 }

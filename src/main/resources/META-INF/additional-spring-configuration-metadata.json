@@ -89,5 +89,30 @@
       "name": "google.api.oauth2.redirect-url",
       "type": "java.lang.String",
       "description": "Description for google.api.oauth2.redirect-url."
+    },
+    {
+      "name": "square.api.oauth2.auth-url",
+      "type": "java.lang.String",
+      "description": "Description for square.api.oauth2.auth-url."
+    },
+    {
+      "name": "square.api.oauth2.token-url",
+      "type": "java.lang.String",
+      "description": "Description for square.api.oauth2.token-url."
+    },
+    {
+      "name": "square.api.oauth2.client-id",
+      "type": "java.lang.String",
+      "description": "Description for square.api.oauth2.client-id."
+    },
+    {
+      "name": "square.api.oauth2.client-secret",
+      "type": "java.lang.String",
+      "description": "Description for square.api.oauth2.client-secret."
+    },
+    {
+      "name": "square.api.oauth2.redirect-url",
+      "type": "java.lang.String",
+      "description": "Description for square.api.oauth2.redirect-url."
     }
   ] }

@@ -2,7 +2,7 @@ package com.bluntsoftware.shirtshop.integrations.types.ss_active.service;
 
 import com.bluntsoftware.shirtshop.model.Garment;
 import com.bluntsoftware.shirtshop.model.GarmentColor;
-import com.bluntsoftware.shirtshop.model.GarmentVendorApi;
+import com.bluntsoftware.shirtshop.model.GarmentVendorCreds;
 import com.bluntsoftware.shirtshop.service.GarmentVendorApiService;
 import com.bluntsoftware.shirtshop.integrations.types.ss_active.model.Product;
 import lombok.extern.slf4j.Slf4j;
@@ -70,7 +70,7 @@ public class ProductService {
     }
 
     public List<Product> getProductsByStyle(String styleId){
-        GarmentVendorApi garmentVendorApi = garmentVendorApiService.get().get();
+        GarmentVendorCreds garmentVendorCreds = garmentVendorApiService.get().get();
 
         RestTemplate restTemplate = new RestTemplate();
         String customerAPIUrl =  "https://api.ssactivewear.com/v2/products/";
@@ -78,7 +78,7 @@ public class ProductService {
                 .queryParam("styleId",styleId)
                 .build();
 
-        HttpEntity<List<Product>> request = new HttpEntity<>(null,createHeaders(garmentVendorApi.getSandsCustomerKey(),garmentVendorApi.getSandsApiKey()));
+        HttpEntity<List<Product>> request = new HttpEntity<>(null,createHeaders(garmentVendorCreds.getSandsCustomerKey(),garmentVendorCreds.getSandsApiKey()));
         ResponseEntity<Product[]> response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, request, Product[].class );
         return Arrays.asList(response.getBody());
     }

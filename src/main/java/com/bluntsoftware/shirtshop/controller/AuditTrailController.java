@@ -2,7 +2,7 @@ package com.bluntsoftware.shirtshop.controller;
 
 import com.bluntsoftware.shirtshop.model.AuditTrail;
 import com.bluntsoftware.shirtshop.service.AuditTrailService;
-import com.bluntsoftware.shirtshop.service.InvoiceService;
+import com.bluntsoftware.shirtshop.service.OrderService;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,9 +16,9 @@ import java.util.List;
 @RequestMapping("/rest/audit")
 public class AuditTrailController {
     private final AuditTrailService service;
-    private final InvoiceService orderService;
+    private final OrderService orderService;
 
-    public AuditTrailController(AuditTrailService service, InvoiceService invoiceService) {
+    public AuditTrailController(AuditTrailService service, OrderService invoiceService) {
         this.service = service;
         this.orderService = invoiceService;
     }

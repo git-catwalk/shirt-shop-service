@@ -12,10 +12,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @AllArgsConstructor
 @Builder
 @Document
-public class GarmentVendorApi {
+public class StripeCreds {
     @Id
     private String id;
-    private String sandsApiKey;
-    private String sandsCustomerKey;
-
+    String publishableKey;
+    String secretKey;
 }

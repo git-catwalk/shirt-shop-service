@@ -94,7 +94,24 @@
       <artifactId>oauth2-platform-api</artifactId>
       <version>6.2.1</version>
     </dependency>
-
+    <!-- https://stripe.com/docs/api?lang=java -->
+    <dependency>
+      <groupId>com.stripe</groupId>
+      <artifactId>stripe-java</artifactId>
+      <version>20.130.0</version>
+    </dependency>
+    <!--https://developer.squareup.com/docs/sdks/java/setup-project -->
+    <dependency>
+      <groupId>com.squareup</groupId>
+      <artifactId>square</artifactId>
+      <version>20.1.0.20220616</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.squareup.okhttp3</groupId>
+      <artifactId>okhttp</artifactId>
+      <version>4.10.0</version>
+    </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-configuration-processor</artifactId>

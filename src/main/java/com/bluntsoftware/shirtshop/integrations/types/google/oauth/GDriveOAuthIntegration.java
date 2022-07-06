@@ -11,6 +11,8 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import java.util.Date;
 import java.util.Map;
 
 public class GDriveOAuthIntegration extends AbstractOAuthIntegration {
@@ -64,6 +66,10 @@ public class GDriveOAuthIntegration extends AbstractOAuthIntegration {
     }
 
     @Override
+    public Date getExpiresAt(Map<String, Object> credentials) {
+        return new Date(System.currentTimeMillis() + getExpirationMillis(credentials));
+    }
+
     public long getExpirationMillis(Map<String, Object> credentials) {
         return Long.parseLong(credentials.get("expires_in").toString()) * 1000;
     }

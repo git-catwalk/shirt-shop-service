@@ -1,7 +1,7 @@
 package com.bluntsoftware.shirtshop.service;
 
 import com.bluntsoftware.shirtshop.model.*;
-import com.bluntsoftware.shirtshop.repository.InvoiceRepo;
+import com.bluntsoftware.shirtshop.repository.OrderRepo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
@@ -12,9 +12,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @Service
 public class JobBoardService {
 
-    private final InvoiceRepo repo;
+    private final OrderRepo repo;
 
-    public JobBoardService(InvoiceRepo repo) {
+    public JobBoardService(OrderRepo repo) {
         this.repo = repo;
     }
 

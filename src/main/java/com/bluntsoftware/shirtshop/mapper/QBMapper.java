@@ -1,11 +1,8 @@
 package com.bluntsoftware.shirtshop.mapper;
 
-
 import com.bluntsoftware.shirtshop.model.Customer;
 import com.bluntsoftware.shirtshop.model.Estimate;
 import com.intuit.ipp.data.EmailAddress;
-import com.intuit.ipp.data.ReferenceType;
-
 
 public class QBMapper {
 

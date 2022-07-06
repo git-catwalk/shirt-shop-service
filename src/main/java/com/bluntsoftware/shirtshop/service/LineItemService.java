@@ -3,7 +3,7 @@ package com.bluntsoftware.shirtshop.service;
 import com.bluntsoftware.shirtshop.model.Invoice;
 import com.bluntsoftware.shirtshop.model.LineItem;
 import com.bluntsoftware.shirtshop.model.PrintLocation;
-import com.bluntsoftware.shirtshop.repository.InvoiceRepo;
+import com.bluntsoftware.shirtshop.repository.OrderRepo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -16,10 +16,10 @@ import java.util.Optional;
 @Service
 public class LineItemService {
 
-    private final InvoiceRepo invoiceRepo;
+    private final OrderRepo invoiceRepo;
     private final AuditTrailService auditTrailService;
 
-    public LineItemService(InvoiceRepo invoiceRepo, AuditTrailService auditTrailService) {
+    public LineItemService(OrderRepo invoiceRepo, AuditTrailService auditTrailService) {
         this.invoiceRepo = invoiceRepo;
         this.auditTrailService = auditTrailService;
     }

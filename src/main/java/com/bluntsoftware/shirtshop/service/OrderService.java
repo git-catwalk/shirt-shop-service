@@ -1,14 +1,17 @@
 package com.bluntsoftware.shirtshop.service;
 
-
+import com.bluntsoftware.shirtshop.integrations.types.square.service.SquareService;
+import com.bluntsoftware.shirtshop.integrations.types.stripe.service.StripeService;
 import com.bluntsoftware.shirtshop.model.*;
 import com.bluntsoftware.shirtshop.repository.GarmentStyleRepo;
-import com.bluntsoftware.shirtshop.repository.InvoiceRepo;
+import com.bluntsoftware.shirtshop.repository.OrderRepo;
 import com.bluntsoftware.shirtshop.repository.SequenceRepo;
+import com.stripe.exception.StripeException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -16,18 +19,25 @@ import java.util.Optional;
 
 @Slf4j
 @Service
-public class InvoiceService {
-    private final InvoiceRepo repo;
+public class OrderService {
+    private final OrderRepo repo;
     private final SequenceRepo sequenceRepo;
     private final GarmentStyleRepo garmentStyleRepo;
+    private final StripeService stripeService;
+    private final SquareService squareService;
     private static final String INVOICE_SEQUENCE_KEY = "invoice-seq-key";
 
-    public InvoiceService(InvoiceRepo repo, SequenceRepo sequenceRepo, GarmentStyleRepo garmentStyleRepo) {
+    public OrderService(OrderRepo repo, SequenceRepo sequenceRepo, GarmentStyleRepo garmentStyleRepo, StripeService stripeService, SquareService squareService) {
         this.repo = repo;
         this.sequenceRepo = sequenceRepo;
         this.garmentStyleRepo = garmentStyleRepo;
+        this.stripeService = stripeService;
+        this.squareService = squareService;
     }
     public Invoice save(Invoice item) {
+        if(item.getOrderDate() == null){
+            item.setOrderDate(new Date());
+        }
         if(item.getCreated() == null){
             item.setCreated(new Date());
         }
@@ -66,6 +76,13 @@ public class InvoiceService {
         }
     }
 
+    @Transactional
+    public Invoice finalizeInvoice(Invoice invoice) throws StripeException {
+        System.out.println(squareService.createAnInvoiceLink(invoice));
+        //invoice.setPaymentUrl(stripeService.createAnInvoiceLink(invoice));
+        //return repo.save(invoice);
+        return invoice;
+    }
     public void deleteById(String id) {
         repo.deleteById(id);
     }

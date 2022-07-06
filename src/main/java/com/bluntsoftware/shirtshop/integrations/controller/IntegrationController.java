@@ -1,11 +1,15 @@
 package com.bluntsoftware.shirtshop.integrations.controller;
 
+import com.bluntsoftware.shirtshop.integrations.model.Integration;
+import com.bluntsoftware.shirtshop.integrations.model.IntegrationDto;
 import com.bluntsoftware.shirtshop.integrations.service.IntegrationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/rest/integration")
@@ -18,7 +22,7 @@ public class IntegrationController {
     }
 
     @GetMapping("/{type}/authUrl")
-    public ResponseEntity<?> getAuthUrl(@PathVariable("type") String type) {
+    public ResponseEntity<Map<String,String>> getAuthUrl(@PathVariable("type") String type) {
         String url = integrationService.getAuthUrl(type);
         Map<String,String> ret = new HashMap<>();
         ret.put("url",url);
@@ -26,14 +30,27 @@ public class IntegrationController {
     }
 
     @PostMapping("/{type}/token")
-    public ResponseEntity<?> createToken(@PathVariable("type") String type,@RequestBody Map<String,Object> authCode) {
-        Map<String,Object> info = integrationService.createToken(type,authCode);
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(info);
+    public ResponseEntity<IntegrationDto> createToken(@PathVariable("type") String type,@RequestBody Map<String,Object> authCode) {
+        IntegrationDto dto = mapIntegrationToIntegrationDto(integrationService.createToken(type,authCode));
+        return ResponseEntity.status(HttpStatus.OK).body(dto);
     }
 
     @GetMapping()
-    public ResponseEntity<?> list() {
-        return ResponseEntity.status(HttpStatus.OK).body(integrationService.findAll());
+    public ResponseEntity<List<IntegrationDto>> list() {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(integrationService.findAll()
+                        .stream()
+                        .map(this::mapIntegrationToIntegrationDto)
+                        .collect(Collectors.toList()));
+    }
+
+    IntegrationDto mapIntegrationToIntegrationDto(Integration integration){
+        return IntegrationDto.builder()
+                .id(integration.getId())
+                .expires(integration.getExpires())
+                .issued(integration.getIssued())
+                .tenant(integration.getTenant())
+                .build();
     }
 
     @DeleteMapping("/{id}")

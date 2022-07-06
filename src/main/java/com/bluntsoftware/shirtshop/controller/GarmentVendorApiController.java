@@ -1,6 +1,6 @@
 package com.bluntsoftware.shirtshop.controller;
 
-import com.bluntsoftware.shirtshop.model.GarmentVendorApi;
+import com.bluntsoftware.shirtshop.model.GarmentVendorCreds;
 import com.bluntsoftware.shirtshop.service.GarmentVendorApiService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.MediaType;
@@ -19,14 +19,14 @@ public class GarmentVendorApiController {
     }
 
     @GetMapping(value = "",produces = MediaType.APPLICATION_JSON_VALUE)
-    public Optional<GarmentVendorApi> get(){
+    public Optional<GarmentVendorCreds> get(){
         return this.service.get();
     }
 
     @PostMapping(value="",produces = MediaType.APPLICATION_JSON_VALUE)
-    public GarmentVendorApi save(@RequestBody Map<String,Object> dto){
+    public GarmentVendorCreds save(@RequestBody Map<String,Object> dto){
         ObjectMapper mapper = new ObjectMapper();
-        return this.service.save(mapper.convertValue(dto, GarmentVendorApi.class));
+        return this.service.save(mapper.convertValue(dto, GarmentVendorCreds.class));
     }
 
 }

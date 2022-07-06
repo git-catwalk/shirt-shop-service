@@ -1,9 +1,9 @@
 package com.bluntsoftware.shirtshop.controller;
 
 import com.bluntsoftware.shirtshop.model.Invoice;
-import com.bluntsoftware.shirtshop.service.InvoiceService;
-import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.bluntsoftware.shirtshop.service.OrderService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.stripe.exception.StripeException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,12 +15,17 @@ import java.util.Map;
 import java.util.Optional;
 @RestController
 @RequestMapping("/rest/invoice")
-public class InvoiceController {
-    private final InvoiceService service;
+public class OrderController {
+    private final OrderService service;
     private final ObjectMapper mapper;
-    public InvoiceController(InvoiceService service, ObjectMapper mapper) {
+    public OrderController(OrderService service, ObjectMapper mapper) {
         this.service = service;
         this.mapper = mapper;
+    }
+
+    @PostMapping(value = "/finalize",produces = MediaType.APPLICATION_JSON_VALUE)
+    public Invoice finalizeInvoice(@RequestBody Map<String,Object> dto) throws StripeException {
+        return this.service.finalizeInvoice(mapper.convertValue(dto, Invoice.class));
     }
 
     @PostMapping(value="",produces = MediaType.APPLICATION_JSON_VALUE)

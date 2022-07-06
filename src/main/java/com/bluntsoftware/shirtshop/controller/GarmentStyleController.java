@@ -6,7 +6,7 @@ import com.bluntsoftware.shirtshop.model.GarmentStyle;
 
 import com.bluntsoftware.shirtshop.service.EstimateService;
 import com.bluntsoftware.shirtshop.service.GarmentStyleService;
-import com.bluntsoftware.shirtshop.service.InvoiceService;
+import com.bluntsoftware.shirtshop.service.OrderService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
 
@@ -28,9 +28,9 @@ import org.springframework.web.multipart.MultipartFile;
 public class GarmentStyleController {
 
   private final GarmentStyleService service;
-private final InvoiceService invoiceService;
+private final OrderService invoiceService;
 private final EstimateService estimateService;
-  public GarmentStyleController(GarmentStyleService service, InvoiceService invoiceService, EstimateService estimateService) {
+  public GarmentStyleController(GarmentStyleService service, OrderService invoiceService, EstimateService estimateService) {
     this.service = service;
     this.invoiceService = invoiceService;
     this.estimateService = estimateService;

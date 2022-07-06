@@ -1,6 +1,6 @@
 package com.bluntsoftware.shirtshop.service;
 
-import com.bluntsoftware.shirtshop.model.GarmentVendorApi;
+import com.bluntsoftware.shirtshop.model.GarmentVendorCreds;
 import com.bluntsoftware.shirtshop.repository.GarmentVendorApiRepo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -17,12 +17,12 @@ public class GarmentVendorApiService {
         this.repo = repo;
     }
 
-    public Optional<GarmentVendorApi> get() {
+    public Optional<GarmentVendorCreds> get() {
         return Optional.of(this.repo.findById(VENDOR_ID)
-                .orElse( GarmentVendorApi.builder().id(VENDOR_ID).build()));
+                .orElse( GarmentVendorCreds.builder().id(VENDOR_ID).build()));
     }
 
-    public GarmentVendorApi save(GarmentVendorApi garmentVendor) {
+    public GarmentVendorCreds save(GarmentVendorCreds garmentVendor) {
         garmentVendor.setId(VENDOR_ID);
         return this.repo.save(garmentVendor);
     }

@@ -35,10 +35,10 @@ public class IntegrationService {
         return oAuthIntegration.getAuthUrl();
     }
 
-    public Map<String, Object> createToken(String type, Map<String, Object> authCode) {
+    public Integration createToken(String type, Map<String, Object> authCode) {
         OAuthIntegration oAuthIntegration = integrationFactory.createIntegration(type);
         Map<String, Object> credentials =  oAuthIntegration.getCredentials(authCode);
-        return saveIntegration(oAuthIntegration,credentials).getCredentials();
+        return saveIntegration(oAuthIntegration,credentials);
     }
 
     public boolean hasCredentials(String type) {
@@ -64,7 +64,7 @@ public class IntegrationService {
                 .id(oAuthIntegration.getType())
                 .credentials(credentials)
                 .issued(new Date())
-                .expires(new Date(System.currentTimeMillis() + oAuthIntegration.getExpirationMillis(credentials)))
+                .expires(oAuthIntegration.getExpiresAt(credentials))
                 .tenant(TenantResolver.resolve())
                 .build());
     }

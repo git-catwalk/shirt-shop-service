@@ -18,7 +18,6 @@ import java.util.List;
 @Builder
 @Document
 public class Invoice {
-
 	@Id
 	private String id;
 	private Long invoiceNumber;
@@ -31,6 +30,10 @@ public class Invoice {
 	private String description;
 	private String owner;
 	private Date dateDue;
+	private BigDecimal amountDue;
+	private BigDecimal amountPaid;
+	private BigDecimal amountRemaining;
+	private BigDecimal discountTotal;
 	private String status;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")
 	private Date orderDate;
@@ -41,4 +44,5 @@ public class Invoice {
 	private PriceProfile pricingProfile;
 	private List<Label> tags;
 	private List<LineItem> items;
+	private List<CustomerTransaction> transactions;
 }

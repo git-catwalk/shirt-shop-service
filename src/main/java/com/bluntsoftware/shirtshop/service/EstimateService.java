@@ -23,13 +23,13 @@ public class EstimateService{
   private final QuickbooksApiService quickbooksService;
   private final EstimateRepo repo;
   private final SequenceRepo sequenceRepo;
-  private final InvoiceService invoiceService;
+  private final OrderService invoiceService;
   private final AuditTrailService auditTrailService;
   private final GarmentStyleRepo garmentStyleRepo;
 
   private static final String ESTIMATE_SEQUENCE_KEY = "estimate-seq-key";
 
-  public EstimateService(QuickbooksApiService quickbooksService, EstimateRepo repo, SequenceRepo sequenceRepo, InvoiceService invoiceService, AuditTrailService auditTrailService, GarmentStyleRepo garmentStyleRepo) {
+  public EstimateService(QuickbooksApiService quickbooksService, EstimateRepo repo, SequenceRepo sequenceRepo, OrderService invoiceService, AuditTrailService auditTrailService, GarmentStyleRepo garmentStyleRepo) {
     this.quickbooksService = quickbooksService;
     this.repo = repo;
     this.sequenceRepo = sequenceRepo;
