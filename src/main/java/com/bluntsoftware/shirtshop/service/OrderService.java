@@ -78,10 +78,9 @@ public class OrderService {
 
     @Transactional
     public Invoice finalizeInvoice(Invoice invoice) throws StripeException {
-        System.out.println(squareService.createAnInvoiceLink(invoice));
+        invoice.setPaymentUrl(squareService.createAnInvoiceLink(invoice));
         //invoice.setPaymentUrl(stripeService.createAnInvoiceLink(invoice));
-        //return repo.save(invoice);
-        return invoice;
+        return repo.save(invoice);
     }
     public void deleteById(String id) {
         repo.deleteById(id);

@@ -19,10 +19,28 @@ import java.util.stream.Collectors;
 @Service
 public class SquareService {
     private final IntegrationService integrationService;
-    private final String location = "LCMDQTP7CSEHV";
+    private String location = "LCMDQTP7CSEHV";
     public SquareService(IntegrationService integrationService) {
         this.integrationService = integrationService;
+
     }
+
+    String getDefaultLocation(){
+        try {
+            List<Location> activeLocations = listLocations()
+                    .stream()
+                    .filter(l-> l.getStatus().equalsIgnoreCase("Active"))
+                    .collect(Collectors.toList());
+
+            if(activeLocations.size() > 0){
+                return this.location = activeLocations.get(0).getId();
+            }
+        } catch (IOException | ApiException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 
     SquareClient getClient(){
         Map<String,Object>  credentials = this.integrationService.getCredentials("square");
@@ -44,13 +62,28 @@ public class SquareService {
 
     public String createAnInvoiceLink(com.bluntsoftware.shirtshop.model.Invoice invoice){
         try {
+            String location = getDefaultLocation();
+            if(location == null){
+                throw new ApiException("A Location is needed");
+            }else{
+                this.location = location;
+            }
             Order order = createAnOrder(invoice);
             Invoice sqInvoice = createInvoice(order,invoice);
-            return sqInvoice.getPublicUrl();
+            return publishInvoice(sqInvoice).getPublicUrl();
         } catch (ApiException | IOException e) {
             e.printStackTrace();
         }
         return "";
+    }
+
+    public Invoice publishInvoice(Invoice invoice) throws IOException, ApiException {
+        PublishInvoiceRequest body = new PublishInvoiceRequest.Builder(invoice.getVersion())
+                .build();
+
+        PublishInvoiceResponse resp = getClient().getInvoicesApi().publishInvoice(invoice.getId(), body);
+
+        return resp.getInvoice();
     }
 
     Invoice createInvoice(Order order,com.bluntsoftware.shirtshop.model.Invoice invoice) throws IOException, ApiException {
@@ -90,7 +123,7 @@ public class SquareService {
                 .orderId(order.getId())
                 .primaryRecipient(primaryRecipient)
                 .paymentRequests(paymentRequests)
-                .deliveryMethod("EMAIL")
+                .deliveryMethod("SHARE_MANUALLY")
                 .invoiceNumber("ORD-" + StringUtils.leftPad(invoice.getInvoiceNumber().toString(), 5, "0") )
                 //.description("We appreciate your business!")
                 .acceptedPaymentMethods(acceptedPaymentMethods)
