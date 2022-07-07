@@ -1,5 +1,6 @@
 package com.bluntsoftware.shirtshop.model;
 
+import com.bluntsoftware.shirtshop.util.CheckAtLeastOneNotEmpty;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,6 +9,8 @@ import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.annotation.Id;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Data
@@ -15,14 +18,18 @@ import java.util.Date;
 @AllArgsConstructor
 @Builder
 @Document
+@CheckAtLeastOneNotEmpty(fieldNames={"email","phone"},message="customer email or phone should not be empty")
 public class Customer {
 
 	@Id
 	private String id;
+
+	@NotNull
 	private String name;
 	private String firstName;
 	private String lastName;
 	private String accountNumber;
+	@Email(message = "customer email should be valid")
 	private String email;
 	private String phone;
 	private String fax;

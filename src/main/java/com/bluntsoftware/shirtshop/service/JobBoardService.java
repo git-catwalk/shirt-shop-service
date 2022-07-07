@@ -31,7 +31,7 @@ public class JobBoardService {
                 .lineItem(li)
                 .printLocation(pl)
                 .dueDate(ord.getDateDue())
-                .orderNumber(ord.getInvoiceNumber()).build();
+                .orderNumber(ord.getOrderNumber()).build();
     }
 
     boolean productionComplete(LineItem li){

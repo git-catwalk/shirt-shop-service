@@ -1,11 +1,13 @@
 package com.bluntsoftware.shirtshop.service;
 
+import com.bluntsoftware.shirtshop.exception.ValidationException;
 import com.bluntsoftware.shirtshop.integrations.types.square.service.SquareService;
 import com.bluntsoftware.shirtshop.integrations.types.stripe.service.StripeService;
 import com.bluntsoftware.shirtshop.model.*;
 import com.bluntsoftware.shirtshop.repository.GarmentStyleRepo;
 import com.bluntsoftware.shirtshop.repository.OrderRepo;
 import com.bluntsoftware.shirtshop.repository.SequenceRepo;
+import com.intuit.ipp.exception.BadRequestException;
 import com.stripe.exception.StripeException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -13,9 +15,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.Optional;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -26,6 +31,7 @@ public class OrderService {
     private final StripeService stripeService;
     private final SquareService squareService;
     private static final String INVOICE_SEQUENCE_KEY = "invoice-seq-key";
+    private static final String ORDER_SEQUENCE_KEY = "order-seq-key";
 
     public OrderService(OrderRepo repo, SequenceRepo sequenceRepo, GarmentStyleRepo garmentStyleRepo, StripeService stripeService, SquareService squareService) {
         this.repo = repo;
@@ -34,6 +40,7 @@ public class OrderService {
         this.stripeService = stripeService;
         this.squareService = squareService;
     }
+
     public Invoice save(Invoice item) {
         if(item.getOrderDate() == null){
             item.setOrderDate(new Date());
@@ -42,13 +49,16 @@ public class OrderService {
             item.setCreated(new Date());
         }
         item.setModified(new Date());
-        if(item.getInvoiceNumber() == null){
-            item.setInvoiceNumber(sequenceRepo.getNextSequenceId(INVOICE_SEQUENCE_KEY));
+
+        if(item.getOrderNumber() == null){
+            item.setOrderNumber(sequenceRepo.getNextSequenceId(ORDER_SEQUENCE_KEY));
         }
+
         Invoice ord = repo.save(item);
         String orderStatus = LineItemService.orderStatus(ord);
         ord.setStatus(orderStatus);
         updatePricing(ord);
+
         return repo.save(ord);
     }
 
@@ -77,7 +87,12 @@ public class OrderService {
     }
 
     @Transactional
-    public Invoice finalizeInvoice(Invoice invoice) throws StripeException {
+    public Invoice finalizeInvoice(Invoice invoice) throws ValidationException {
+        List<String> errors = validate(invoice);
+        if(errors.size() > 0){
+            throw new ValidationException(String.format("Order has errors %s",Arrays.toString(errors.toArray())));
+        }
+        invoice.setInvoiceNumber(sequenceRepo.getNextSequenceId(INVOICE_SEQUENCE_KEY));
         invoice.setPaymentUrl(squareService.createAnInvoiceLink(invoice));
         //invoice.setPaymentUrl(stripeService.createAnInvoiceLink(invoice));
         return repo.save(invoice);
@@ -97,5 +112,33 @@ public class OrderService {
     public Page<Invoice> search(String term, Pageable pageable) {
         log.info("create a filter in repo for search term {}",term);
         return repo.findAllByCustomer_NameIgnoreCaseContaining(term,pageable);
+    }
+
+
+    List<String> validate(Invoice invoice){
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        Validator validator = factory.getValidator();
+        Set<ConstraintViolation<Invoice>> invoiceErrors = validator.validate(invoice);
+        Set<ConstraintViolation<Customer>> customerErrors = validator.validate(invoice.getCustomer());
+        Set<ConstraintViolation<LineItem>> lineItemErrors = new HashSet<>();
+        for(LineItem li : invoice.getItems()){
+            lineItemErrors.addAll(validator.validate(li));
+        }
+        List<String> errors = new ArrayList<>();
+        invoiceErrors.forEach(c-> errors.add(c.getMessage()));
+        customerErrors.forEach(c-> errors.add(c.getMessage()));
+        lineItemErrors.forEach(c-> errors.add(c.getMessage()));
+        return errors;
+    }
+
+    public void fixOrderNumber() {
+        findAll().forEach(i->{
+            Long invNumber = i.getInvoiceNumber();
+            Long ordNumber = i.getOrderNumber();
+            if(invNumber != null && ordNumber == null){
+                i.setOrderNumber(invNumber);
+                repo.save(i);
+            }
+        });
     }
 }

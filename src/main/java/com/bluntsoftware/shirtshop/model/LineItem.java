@@ -4,6 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.Data;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -26,6 +29,7 @@ public class LineItem {
 	private String brand;
 	private String thumbnail;
 	private BigDecimal garmentPriceTotal;
+	@NotNull
 	private BigDecimal costEa;
 	private Integer totalColors;
 	private String notes;
@@ -36,6 +40,8 @@ public class LineItem {
 	//line item Delivery
 	private Date deliveryDate;
 	private Date deliveryReceivedDate;
+
+	@Size(min=1,message="at least one print location should exist")
 	private List<PrintLocation> printLocations;
 	private List<Screen> screens;
 	private List<NamesNumbers> namesNumbers;

@@ -1,5 +1,6 @@
 package com.bluntsoftware.shirtshop.controller;
 
+import com.bluntsoftware.shirtshop.exception.ValidationException;
 import com.bluntsoftware.shirtshop.model.Invoice;
 import com.bluntsoftware.shirtshop.service.OrderService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -8,9 +9,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 @RestController
@@ -24,7 +28,7 @@ public class OrderController {
     }
 
     @PostMapping(value = "/finalize",produces = MediaType.APPLICATION_JSON_VALUE)
-    public Invoice finalizeInvoice(@RequestBody Map<String,Object> dto) throws StripeException {
+    public Invoice finalizeInvoice(@RequestBody Map<String,Object> dto) throws Exception {
         return this.service.finalizeInvoice(mapper.convertValue(dto, Invoice.class));
     }
 
@@ -58,5 +62,15 @@ public class OrderController {
         Sort sorter = StringUtils.isEmpty(sort) ? Sort.unsorted() : Sort.by(Sort.Direction.fromString(sord),sort);
         return this.service.search(searchTerm, PageRequest.of(page,limit,sorter));
     }
+    @ResponseBody
+    @GetMapping(value = {"/fixOrderNumber"}, produces = { "application/json" })
+    public Map<String,Object> fixOrderNumber(){
+        this.service.fixOrderNumber();
+        return new HashMap<>();
+    }
 
+    @ExceptionHandler(value = ValidationException.class)
+    public ResponseEntity<String> handleValidationException(ValidationException validationException) {
+        return new ResponseEntity<>(validationException.getMessage(), HttpStatus.BAD_REQUEST);
+    }
 }

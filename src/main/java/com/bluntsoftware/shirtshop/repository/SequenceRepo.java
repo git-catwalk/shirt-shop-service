@@ -35,4 +35,9 @@ public class SequenceRepo {
         }
         return seqId.getSeq();
     }
+
+    public void setSequenceNumber(String key,Long seq){
+        mongoTemplate.save(SequenceId.builder().seq(seq).id(key).build());
+    }
+
 }

@@ -101,7 +101,7 @@ public class SquareService {
                 .build();
         paymentRequests.add(invoicePaymentRequest);
 
-        if(invoice.getDepositPercentage() != null && !invoice.getDepositPercentage().isEmpty()){
+        if(invoice.getDepositPercentage() != null && !invoice.getDepositPercentage().isEmpty() && !invoice.getDepositPercentage().equalsIgnoreCase("0")){
             InvoicePaymentRequest invoiceDepositRequest = new InvoicePaymentRequest.Builder()
                     .requestType("DEPOSIT")
                     .dueDate(getSimpleDate(new Date()))
