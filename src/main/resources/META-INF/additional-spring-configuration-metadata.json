@@ -114,5 +114,10 @@
       "name": "square.api.oauth2.redirect-url",
       "type": "java.lang.String",
       "description": "Description for square.api.oauth2.redirect-url."
+    },
+    {
+      "name": "square.api.oauth2.sandbox-token",
+      "type": "java.lang.String",
+      "description": "Description for square.api.oauth2.sandbox-token."
     }
   ] }

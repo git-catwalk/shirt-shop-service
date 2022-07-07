@@ -1,6 +1,7 @@
 package com.bluntsoftware.shirtshop.integrations.types.square.service;
 
 import com.bluntsoftware.shirtshop.integrations.service.IntegrationService;
+import com.bluntsoftware.shirtshop.integrations.types.square.config.SquareConfig;
 import com.bluntsoftware.shirtshop.model.LineItem;
 import com.squareup.square.Environment;
 import com.squareup.square.SquareClient;
@@ -19,10 +20,11 @@ import java.util.stream.Collectors;
 @Service
 public class SquareService {
     private final IntegrationService integrationService;
+    private final SquareConfig squareConfig;
     private String location = "LCMDQTP7CSEHV";
-    public SquareService(IntegrationService integrationService) {
+    public SquareService(IntegrationService integrationService, SquareConfig squareConfig) {
         this.integrationService = integrationService;
-
+        this.squareConfig = squareConfig;
     }
 
     String getDefaultLocation(){
@@ -41,8 +43,14 @@ public class SquareService {
         return null;
     }
 
+    SquareClient getSandboxClient(){
+        return new SquareClient.Builder()
+                .environment(Environment.SANDBOX)
+                .accessToken(squareConfig.getSandboxToken())
+                .build();
+    }
 
-    SquareClient getClient(){
+    SquareClient getProductionClient(){
         Map<String,Object>  credentials = this.integrationService.getCredentials("square");
         if(credentials.containsKey("access_token")){
             return new SquareClient.Builder()
@@ -51,6 +59,14 @@ public class SquareService {
                     .build();
         }
         return null;
+    }
+
+    SquareClient getClient(){
+        if(squareConfig.getSandboxToken() != null && !squareConfig.getSandboxToken().isEmpty()){
+            return getSandboxClient();
+        }else{
+            return getProductionClient();
+        }
     }
 
     public List<Location> listLocations() throws IOException, ApiException {
@@ -182,10 +198,10 @@ public class SquareService {
         for(LineItem li:invoice.getItems()){
             AtomicReference<Integer> qty = new AtomicReference<>(0);
             li.getSizes().values().forEach((qs)->   {
-                qty.updateAndGet(v -> v + qs.getQty());
+                qty.updateAndGet(v -> v + (qs != null && qs.getQty() != null ? qs.getQty() : 0));
             });
             li.getNamesNumbers().forEach((nn)->{
-                qty.updateAndGet(v -> v + nn.getQty());
+                qty.updateAndGet(v -> v + (nn != null && nn.getQty() != null ? nn.getQty() : 0));
             });
             Number itemAmount = li.getCostEa().doubleValue() *100;
             OrderLineItem lineItem = new OrderLineItem.Builder(qty.get().toString())

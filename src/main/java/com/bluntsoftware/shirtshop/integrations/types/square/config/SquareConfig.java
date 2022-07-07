@@ -14,4 +14,5 @@ public class SquareConfig {
         String clientId;
         String clientSecret;
         String redirectUrl;
+        String sandboxToken;
 }
