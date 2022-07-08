@@ -9,6 +9,7 @@ import com.squareup.square.api.LocationsApi;
 import com.squareup.square.exceptions.ApiException;
 import com.squareup.square.models.*;
 import org.apache.commons.lang.StringUtils;
+import org.jsoup.Jsoup;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -96,9 +97,7 @@ public class SquareService {
     public Invoice publishInvoice(Invoice invoice) throws IOException, ApiException {
         PublishInvoiceRequest body = new PublishInvoiceRequest.Builder(invoice.getVersion())
                 .build();
-
         PublishInvoiceResponse resp = getClient().getInvoicesApi().publishInvoice(invoice.getId(), body);
-
         return resp.getInvoice();
     }
 
@@ -140,7 +139,7 @@ public class SquareService {
                 .primaryRecipient(primaryRecipient)
                 .paymentRequests(paymentRequests)
                 .deliveryMethod("SHARE_MANUALLY")
-                .invoiceNumber("ORD-" + StringUtils.leftPad(invoice.getInvoiceNumber().toString(), 5, "0") )
+                .invoiceNumber("INV-" + StringUtils.leftPad(invoice.getInvoiceNumber().toString(), 5, "0") )
                 //.description("We appreciate your business!")
                 .acceptedPaymentMethods(acceptedPaymentMethods)
                 .saleOrServiceDate(getSimpleDate(new Date()))
@@ -189,6 +188,17 @@ public class SquareService {
         return  resp.getOrder();
     }
 
+    String getSizesDescription(LineItem li){
+        StringBuilder sizes = new StringBuilder();
+        for(String sizeName:li.getSizes().keySet()){
+            Integer qty = li.getSizes().get(sizeName).getQty();
+            if(qty != null && qty > 0){
+                sizes.append(qty).append(":").append(sizeName).append(" ");
+            }
+        }
+        return sizes.toString();
+    }
+
     Order mapInvoiceToOrder(com.bluntsoftware.shirtshop.model.Invoice invoice) throws IOException, ApiException {
         Order.Builder builder = new Order.Builder(location)
                 .referenceId(invoice.getId())
@@ -196,6 +206,7 @@ public class SquareService {
 
         List<OrderLineItem> orderLineItems = new ArrayList<>();
         for(LineItem li:invoice.getItems()){
+
             AtomicReference<Integer> qty = new AtomicReference<>(0);
             li.getSizes().values().forEach((qs)->   {
                 qty.updateAndGet(v -> v + (qs != null && qs.getQty() != null ? qs.getQty() : 0));
@@ -205,7 +216,8 @@ public class SquareService {
             });
             Number itemAmount = li.getCostEa().doubleValue() *100;
             OrderLineItem lineItem = new OrderLineItem.Builder(qty.get().toString())
-                    .name(li.getDescription())
+                    .name(li.getDescription() + " (" + li.getGarmentColor().getName() + ")")
+                    .note(getSizesDescription(li) + "\n\r" + htmlToText(li.getGarmentStyle().getDescription()))
                     .basePriceMoney(new Money.Builder()
                             .currency("USD")
                             .amount(itemAmount.longValue()).build())
@@ -241,6 +253,10 @@ public class SquareService {
             builder.discounts(discounts);
         }
         return builder.build();
+    }
+
+    private String htmlToText(String description) {
+        return Jsoup.parse(description).wholeText();
     }
 
     Customer findOrCreateCustomer(com.bluntsoftware.shirtshop.model.Customer customer) throws IOException, ApiException {
