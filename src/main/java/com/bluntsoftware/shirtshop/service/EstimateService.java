@@ -113,7 +113,23 @@ public class EstimateService{
           gs = current;
         }
         gs.setEstPrice(avgCost);
-        garmentStyleRepo.save(gs);
+        gs = garmentStyleRepo.save(gs);
+       /* if(!gs.getReseller().equalsIgnoreCase("S&SActiveWear")){
+          for(String size:i.getSizes().keySet()){
+            Garment g = Garment.builder()
+                    .sizeName(size)
+                    .sizeCode(size)
+                    .styleId(gs.getStyleId())
+                    .webColor(i.getGarmentColor().getWebColor())
+                    .colorCode(i.getGarmentColor().getColorId())
+                    .colorName(i.getGarmentColor().getName())
+                    .customerPrice(i.getCostEa())
+                    .brandName(i.getBrand())
+                    .piecePrice(i.getCostEa())
+                    .build();
+          }
+
+        }*/
       }
     }
   }

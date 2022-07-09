@@ -70,7 +70,7 @@ private final EstimateService estimateService;
 
   @DeleteMapping(value = "")
   public void deleteAll(){
-    this.service.deleteAll();
+    this.service.deleteAllSandSStyles();
   }
 
   @ResponseBody

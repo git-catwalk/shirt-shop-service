@@ -29,6 +29,11 @@ public class GarmentController {
         return this.service.save(mapper.convertValue(dto, Garment.class));
     }
 
+    @PostMapping(value="/saveAll",produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<Garment> save(@RequestBody List<Garment> dto){
+        return this.service.saveAll(dto);
+    }
+
     @GetMapping(value = "/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
     public Optional<Garment> findById(@PathVariable("id") String id ){
         return this.service.findById(String.valueOf(id));
@@ -43,6 +48,13 @@ public class GarmentController {
     public void deleteById(@PathVariable("id") String id ){
         this.service.deleteById(String.valueOf(id));
     }
+
+
+    @DeleteMapping(value = "")
+    public void deleteAll(){
+        this.service.deleteAll();
+    }
+
 
     @ResponseBody
     @GetMapping(value = {"/search"}, produces = { "application/json" })

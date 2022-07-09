@@ -41,7 +41,7 @@ public class GarmentStyleService {
   }
 
   public void deleteById(String id) {
-      repo.deleteById(id);
+    repo.deleteById(id);
   }
 
   public Optional<GarmentStyle> findById(String id) {
@@ -84,6 +84,9 @@ public class GarmentStyleService {
     this.repo.deleteAll();
   }
 
+  public void deleteAllSandSStyles(){
+      this.repo.deleteAllByReseller("S&SActiveWear");
+  }
   public List<GarmentColor> findColors(String styleId) {
     return this.productService.findColors(styleId);
   }

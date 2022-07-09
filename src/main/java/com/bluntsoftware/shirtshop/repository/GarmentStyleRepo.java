@@ -18,4 +18,5 @@ public interface GarmentStyleRepo extends MongoRepository<GarmentStyle, String> 
     List<GarmentStyle> findAllByBrandNameIgnoreCaseContainingAndTitleIgnoreCaseContaining(String brand, String title);
     GarmentStyle findByStyleId(String styleId);
     List<GarmentStyle> findAllByEstPrice(BigDecimal bigDecimal,Pageable pageable);
+    void deleteAllByReseller(String reseller);
 }

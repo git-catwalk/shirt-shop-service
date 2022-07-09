@@ -33,6 +33,10 @@ public class GarmentService {
             return garmentRepo.save(garment);
     }
 
+    public List<Garment> saveAll(List<Garment> garments) {
+        return garmentRepo.saveAll(garments);
+    }
+
     public Optional<Garment> findById(String id) {
         return garmentRepo.findById(id);
     }
@@ -79,5 +83,9 @@ public class GarmentService {
 
     public List<Garment> findGarmentsByStyleIdAndColorId(String styleId, String colorId) {
         return findGarmentsByStyleId(styleId).stream().filter((p)->p.getColorCode().equalsIgnoreCase(colorId)).collect(Collectors.toList());
+    }
+
+    public void deleteAll() {
+        garmentRepo.deleteAll();
     }
 }
