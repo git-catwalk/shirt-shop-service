@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -20,4 +21,5 @@ public class PrintLocation {
 	private Date prePressCompleteDate;
 	private Date productionStartDate;
 	private Date productionCompleteDate;
+	private List<Label> tags;
 }
