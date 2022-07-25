@@ -53,6 +53,7 @@ public class Customer {
 	private String deliveryInstructions;
 	private PriceProfile pricingProfile;
 	private Double taxRate;
+	private String taxId;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")
 	private Date created;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")

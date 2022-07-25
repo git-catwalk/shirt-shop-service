@@ -41,6 +41,8 @@ public class LineItem {
 	private Date deliveryDate;
 	private Date deliveryReceivedDate;
 
+	private List<Label> tags;
+
 	@Size(min=1,message="at least one print location should exist")
 	private List<PrintLocation> printLocations;
 	private List<Screen> screens;

@@ -7,8 +7,6 @@ import com.bluntsoftware.shirtshop.model.*;
 import com.bluntsoftware.shirtshop.repository.GarmentStyleRepo;
 import com.bluntsoftware.shirtshop.repository.OrderRepo;
 import com.bluntsoftware.shirtshop.repository.SequenceRepo;
-import com.intuit.ipp.exception.BadRequestException;
-import com.stripe.exception.StripeException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,7 +18,13 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 @Slf4j
 @Service
@@ -93,10 +97,11 @@ public class OrderService {
             throw new ValidationException(String.format("Order has errors %s",Arrays.toString(errors.toArray())));
         }
         invoice.setInvoiceNumber(sequenceRepo.getNextSequenceId(INVOICE_SEQUENCE_KEY));
-        invoice.setPaymentUrl(squareService.createAnInvoiceLink(invoice));
-        //invoice.setPaymentUrl(stripeService.createAnInvoiceLink(invoice));
+        String invoiceLink = squareService.createAnInvoiceLink(invoice);
+        invoice.setPaymentUrl(invoiceLink);
         return repo.save(invoice);
     }
+
     public void deleteById(String id) {
         repo.deleteById(id);
     }

@@ -17,4 +17,5 @@ public class Label {
     String id;
     String name;
     String color;
+    TagGroup tagGroup;
 }

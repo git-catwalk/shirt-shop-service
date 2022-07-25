@@ -59,7 +59,7 @@ public class JobBoardService {
         List<JobCard> prepress = new ArrayList<>();
         List<JobCard> production = new ArrayList<>();
         List<JobCard> delivery = new ArrayList<>();
-        this.repo.findAllByCustomer_NameIgnoreCaseContainingOrStatusIgnoreCaseContainingOrInvoiceNumber(searchTerm,searchTerm,orderNumber).forEach(ord-> ord.getItems().forEach(li->{
+        this.repo.findAllByCustomer_NameIgnoreCaseContainingOrStatusIgnoreCaseContainingOrOrderNumber(searchTerm,searchTerm,orderNumber).forEach(ord-> ord.getItems().forEach(li->{
            if(li.getReceivedDate() == null){
                orderGarments.add(getJobCard(ord,li,null));
            }

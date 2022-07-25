@@ -12,4 +12,5 @@ import java.util.List;
 public interface OrderRepo extends MongoRepository<Invoice, String> {
     Page<Invoice> findAllByCustomer_NameIgnoreCaseContaining(String term, Pageable pageable);
     List<Invoice>  findAllByCustomer_NameIgnoreCaseContainingOrStatusIgnoreCaseContainingOrInvoiceNumber(String customer,String status,Integer invNum);
+    List<Invoice>  findAllByCustomer_NameIgnoreCaseContainingOrStatusIgnoreCaseContainingOrOrderNumber(String customer,String status,Integer orderNumber);
 }
