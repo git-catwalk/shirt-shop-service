@@ -58,7 +58,7 @@ public class LineItemService {
             due.setTime(order.getDateDue());
         }
         String status = orderItemsStatus(order);
-        status = !status.equalsIgnoreCase("Order Complete") && due != null && now.after(due) ? status + " (Order is late)" : status;
+        status = !status.equalsIgnoreCase(" (Complete) ") && due != null && now.after(due) ? status + " (Late) " : status;
         return status;
     }
 
