@@ -29,6 +29,11 @@ public class IntegrationController {
         return ResponseEntity.ok(ret);
     }
 
+    @GetMapping("/{type}/status")
+    public ResponseEntity<Map<String,Object>> getStatus(@PathVariable("type") String type) {
+        return ResponseEntity.ok(integrationService.getStatus(type));
+    }
+    
     @PostMapping("/{type}/token")
     public ResponseEntity<IntegrationDto> createToken(@PathVariable("type") String type,@RequestBody Map<String,Object> authCode) {
         IntegrationDto dto = mapIntegrationToIntegrationDto(integrationService.createToken(type,authCode));

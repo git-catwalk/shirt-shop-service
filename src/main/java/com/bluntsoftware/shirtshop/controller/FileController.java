@@ -4,6 +4,7 @@ import com.bluntsoftware.shirtshop.model.FileItem;
 import com.bluntsoftware.shirtshop.model.FileItems;
 import com.bluntsoftware.shirtshop.service.FileService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +28,24 @@ private final FileService fileService;
     public FileController(FileService fileService) {
         this.fileService = fileService;
     }
+
+    @GetMapping({"/view/{id}"})
+    @ResponseBody
+    public ResponseEntity<InputStreamResource> view(@PathVariable String id) throws IOException, GeneralSecurityException {
+        return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_JPEG)
+                .body(new InputStreamResource(fileService.getImage(id)));
+    }
+
+    @GetMapping({"/generate/{id}"})
+    @ResponseBody
+    public ResponseEntity<Map<String,Object>> generateLink(@PathVariable String id) throws IOException, GeneralSecurityException {
+        Map<String,Object> ret = new HashMap<>();
+        ret.put("link",fileService.generateLink(id));
+        return ResponseEntity.ok()
+                .body(ret);
+    }
+
 
     @GetMapping({"/get/{id}"})
     public ResponseEntity<FileItem> get(@PathVariable(required = false) String id) throws IOException, GeneralSecurityException {

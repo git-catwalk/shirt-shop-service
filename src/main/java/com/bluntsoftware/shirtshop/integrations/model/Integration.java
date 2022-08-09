@@ -24,4 +24,5 @@ public class Integration {
     private Date issued;
     private Date expires;
     private Map<String,Object> credentials;
+
 }

@@ -10,9 +10,8 @@ import com.google.api.services.drive.model.FileList;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+
+import java.io.*;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -56,6 +55,7 @@ public class FileService {
             listFilesAndSubfolders(f.getId(), list);
         }
     }
+
     public FileItems listFolderContent(String parentId) throws IOException, GeneralSecurityException {
         if (parentId == null) {
             parentId = "root";
@@ -103,13 +103,27 @@ public class FileService {
         }
     }
 
+    public FileInputStream getImage(String id) throws GeneralSecurityException, IOException {
+        return new FileInputStream(new java.io.File("scratch",id));
+    }
+
+    public String generateLink(String id) throws IOException, GeneralSecurityException {
+        java.io.File scratch = new java.io.File("scratch");
+        if(!scratch.exists()){
+            scratch.mkdirs();
+        }
+        downloadFile(id,new FileOutputStream(new java.io.File(scratch,id)));
+        return "/rest/files/view/" + id;
+    }
+
     public FileItem getById(String id) throws GeneralSecurityException, IOException {
         File file = googleDriveManager.getInstance().files()
                 .get(id)
-                .setFields("parents,modifiedTime,mimeType,id,name,kind,createdTime,description,size")
+                .setFields("parents,modifiedTime,mimeType,id,name,kind,createdTime,description,size,webViewLink,thumbnailLink,webContentLink")
                 .execute();
         if(file != null){
-            return convert(file);
+            FileItem fileItem = convert(file);
+            return fileItem;
         }
        return null;
     }
@@ -127,6 +141,9 @@ public class FileService {
                 .description(f.getDescription())
                 .id(f.getId())
                 .folderId(folderId)
+                .webViewLink(f.getWebViewLink())
+                .downloadLink(f.getWebContentLink())
+                .thumbnailLink(f.getThumbnailLink())
                 .name(f.getName())
                 .size(f.getSize() != null ? f.getSize().toString() : "0")
                 .type(f.getMimeType())
@@ -229,6 +246,7 @@ public class FileService {
 
         return folderId;
     }
+
 
 
 }

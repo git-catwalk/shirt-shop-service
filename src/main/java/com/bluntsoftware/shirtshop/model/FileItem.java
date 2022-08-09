@@ -19,5 +19,8 @@ public class FileItem {
     String size;
     String type;
     String contents;
+    String webViewLink;
+    String thumbnailLink;
+    String downloadLink;
     String description;
 }

@@ -76,4 +76,12 @@ public class IntegrationService {
     public void removeById(String id) {
         integrationRepo.deleteById(id);
     }
+
+    public Map<String,Object> getStatus(String type) {
+        Map<String,Object> ret = new HashMap<>();
+        Integration integration = get(type);
+        ret.put("type",type);
+        ret.put("configured",integration.getCredentials() != null);
+        return  ret;
+    }
 }
