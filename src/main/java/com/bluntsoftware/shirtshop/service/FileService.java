@@ -9,13 +9,10 @@ import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.FileList;
 import lombok.extern.slf4j.Slf4j;
 import net.coobird.thumbnailator.Thumbnails;
-import net.coobird.thumbnailator.filters.Canvas;
-import net.coobird.thumbnailator.geometry.Positions;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-
-import java.awt.Color;
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -23,6 +20,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.URL;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -101,6 +99,7 @@ public class FileService {
         Collections.reverse(ret);
         return ret;
     }
+
     private void getPath(String parentId,List<Map<String, String>> path) throws GeneralSecurityException, IOException {
         FileItem fileItem = getById(parentId);
         if(fileItem != null){
@@ -140,8 +139,30 @@ public class FileService {
                 .toOutputStream(new FileOutputStream(thumbnail));
     }
 
+    void createThumbnail2(String id) throws GeneralSecurityException, IOException {
+        String thumbLink = getById(id).getThumbnailLink();
+        if(thumbLink == null || thumbLink.equalsIgnoreCase("")){
+            createThumbnail(id);
+            return;
+        }
+        URL imageUrl = new URL(thumbLink);
+        BufferedImage image = ImageIO.read(imageUrl);
+        java.io.File tempFolder = new java.io.File(System.getProperty("java.io.tmpdir"));
+        java.io.File thumbnails = new java.io.File(tempFolder,"thumbnails");
+        if(!thumbnails.exists()){
+            thumbnails.mkdirs();
+        }
+        java.io.File thumbnail = new java.io.File(thumbnails,id);
+        if(thumbnail.exists()){
+            thumbnail.delete();
+        }
+        FileOutputStream fos = new FileOutputStream(thumbnail);
+        ImageIO.write(image,"png",fos);
+        fos.flush();
+    }
+
     public String generateLink(String id) throws IOException, GeneralSecurityException {
-        createThumbnail(id);
+        createThumbnail2(id);
         return "/rest/files/view/" + id;
     }
 
@@ -275,7 +296,4 @@ public class FileService {
 
         return folderId;
     }
-
-
-
 }

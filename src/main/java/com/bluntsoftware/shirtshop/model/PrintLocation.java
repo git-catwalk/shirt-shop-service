@@ -1,6 +1,5 @@
 package com.bluntsoftware.shirtshop.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -16,6 +15,7 @@ import java.util.List;
 public class PrintLocation {
 	private String description;
 	private String printType;
+	private FileItem fileItem;
 	private String printTypeProperty;
 	private Date prePressStartDate;
 	private Date prePressCompleteDate;

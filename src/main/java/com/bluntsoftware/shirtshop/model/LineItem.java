@@ -28,6 +28,7 @@ public class LineItem {
 	private Integer discount;
 	private String brand;
 	private String thumbnail;
+	private FileItem fileItem;
 	private BigDecimal garmentPriceTotal;
 	@NotNull
 	private BigDecimal costEa;
