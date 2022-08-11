@@ -8,10 +8,21 @@ import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.FileList;
 import lombok.extern.slf4j.Slf4j;
+import net.coobird.thumbnailator.Thumbnails;
+import net.coobird.thumbnailator.filters.Canvas;
+import net.coobird.thumbnailator.geometry.Positions;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.*;
+
+import java.awt.Color;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -103,16 +114,34 @@ public class FileService {
         }
     }
 
-    public FileInputStream getImage(String id) throws GeneralSecurityException, IOException {
-        return new FileInputStream(new java.io.File("scratch",id));
+    public FileInputStream getImage(String id) throws IOException, GeneralSecurityException {
+        java.io.File tempFolder = new java.io.File(System.getProperty("java.io.tmpdir"));
+        java.io.File thumbnails = new java.io.File(tempFolder,"thumbnails");
+        return new FileInputStream(new java.io.File(thumbnails,id));
+    }
+
+    public void createThumbnail(String id) throws IOException, GeneralSecurityException {
+        java.io.File tempFolder = new java.io.File(System.getProperty("java.io.tmpdir"));
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        downloadFile(id,baos);
+        java.io.File thumbnails = new java.io.File(tempFolder,"thumbnails");
+        if(!thumbnails.exists()){
+            thumbnails.mkdirs();
+        }
+        java.io.File thumbnail = new java.io.File(thumbnails,id);
+
+        if(thumbnail.exists()){
+            thumbnail.delete();
+        }
+
+        Thumbnails.of(new ByteArrayInputStream(baos.toByteArray()))
+                .size(200,200)
+                .keepAspectRatio(true)
+                .toOutputStream(new FileOutputStream(thumbnail));
     }
 
     public String generateLink(String id) throws IOException, GeneralSecurityException {
-        java.io.File scratch = new java.io.File("scratch");
-        if(!scratch.exists()){
-            scratch.mkdirs();
-        }
-        downloadFile(id,new FileOutputStream(new java.io.File(scratch,id)));
+        createThumbnail(id);
         return "/rest/files/view/" + id;
     }
 

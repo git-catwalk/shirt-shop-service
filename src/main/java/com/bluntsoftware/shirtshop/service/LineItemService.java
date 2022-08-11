@@ -3,10 +3,13 @@ package com.bluntsoftware.shirtshop.service;
 import com.bluntsoftware.shirtshop.model.Invoice;
 import com.bluntsoftware.shirtshop.model.LineItem;
 import com.bluntsoftware.shirtshop.model.PrintLocation;
+import com.bluntsoftware.shirtshop.repository.EstimateRepo;
 import com.bluntsoftware.shirtshop.repository.OrderRepo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -15,17 +18,42 @@ import java.util.Optional;
 @Slf4j
 @Service
 public class LineItemService {
-
-    private final OrderRepo invoiceRepo;
+    private final EstimateRepo estimateRepo;
+    private final OrderRepo orderRepo;
+    private final FileService fileService;
     private final AuditTrailService auditTrailService;
 
-    public LineItemService(OrderRepo invoiceRepo, AuditTrailService auditTrailService) {
-        this.invoiceRepo = invoiceRepo;
+    public LineItemService(EstimateRepo estimateRepo, OrderRepo orderRepo, FileService fileService, AuditTrailService auditTrailService) {
+        this.estimateRepo = estimateRepo;
+        this.orderRepo = orderRepo;
+        this.fileService = fileService;
         this.auditTrailService = auditTrailService;
     }
 
+    public void regenerateThumbnails(){
+        estimateRepo.findAll().forEach(o->{
+            o.getItems().forEach(this::regenerateLineItemThumbnail);
+        });
+
+        orderRepo.findAll().forEach(o->{
+            o.getItems().forEach(this::regenerateLineItemThumbnail);
+        });
+    }
+
+    private void regenerateLineItemThumbnail(LineItem li){
+        String thumbnail = li.getThumbnail();
+        if(thumbnail != null && !thumbnail.equalsIgnoreCase("")){
+            String id = thumbnail.substring(thumbnail.lastIndexOf('/') + 1);
+            try {
+                fileService.createThumbnail(id);
+            } catch (IOException | GeneralSecurityException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public Invoice save(String orderId, LineItem item) {
-        Invoice ord = this.invoiceRepo.findById(orderId).orElse(null);
+        Invoice ord = this.orderRepo.findById(orderId).orElse(null);
         if(ord != null){
             List<LineItem> lineItems = ord.getItems();
             Optional<LineItem> li = lineItems.stream().filter(i-> i.getId().equalsIgnoreCase(item.getId())).findFirst();
@@ -45,7 +73,7 @@ public class LineItemService {
                 auditTrailService.audit("order status changed from " + orderStatus + " to " + newOrderStatus,orderId);
             }
             ord.setStatus(newOrderStatus);
-            return this.invoiceRepo.save(ord);
+            return this.orderRepo.save(ord);
         }
         return null;
     }

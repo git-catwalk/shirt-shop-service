@@ -17,7 +17,9 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -34,6 +36,7 @@ public class OrderService {
     private final GarmentStyleRepo garmentStyleRepo;
     private final StripeService stripeService;
     private final SquareService squareService;
+
     private static final String INVOICE_SEQUENCE_KEY = "invoice-seq-key";
     private static final String ORDER_SEQUENCE_KEY = "order-seq-key";
 
@@ -89,6 +92,8 @@ public class OrderService {
             }
         }
     }
+
+
 
     @Transactional
     public Invoice finalizeInvoice(Invoice invoice) throws ValidationException {

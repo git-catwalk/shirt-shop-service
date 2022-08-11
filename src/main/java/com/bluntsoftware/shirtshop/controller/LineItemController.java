@@ -1,6 +1,5 @@
 package com.bluntsoftware.shirtshop.controller;
 
-import com.bluntsoftware.shirtshop.model.Estimate;
 import com.bluntsoftware.shirtshop.model.Invoice;
 import com.bluntsoftware.shirtshop.model.LineItem;
 import com.bluntsoftware.shirtshop.service.LineItemService;
@@ -29,4 +28,10 @@ public class LineItemController {
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         return this.lineItemService.save(orderId,mapper.convertValue(dto, LineItem.class));
     }
+
+    @GetMapping("/generate")
+    public void regenerateThumbnails(){
+        //lineItemService.regenerateThumbnails();
+    }
+
 }
