@@ -144,7 +144,7 @@ public class EstimateService{
             .estimateId(estimate.getId())
             .customer(estimate.getCustomer())
             .pricingProfile(estimate.getPricingProfile())
-            .dateDue(estimate.getDateDue())
+            .tags(estimate.getTags())
             .items(estimate.getItems())
             .build();
   }

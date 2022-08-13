@@ -7,6 +7,8 @@ import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.annotation.Id;
 import com.fasterxml.jackson.annotation.JsonFormat;
+
+import javax.validation.constraints.FutureOrPresent;
 import java.util.Date;
 import java.math.BigDecimal;
 import java.util.List;
@@ -28,8 +30,8 @@ public class Estimate {
 	private Customer customer;
 	private String description;
 	private String owner;
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")
-	private Date dateDue;
+	@FutureOrPresent(message="order due date must be in the present or in the future")
+	private Date expirationDate;
 	private String status;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")
 	private Date orderDate;
@@ -37,6 +39,7 @@ public class Estimate {
 	private String depositPercentage;
 	private BigDecimal depositAmount;
 	private String paymentUrl;
+	private List<Label> tags;
 	private PriceProfile pricingProfile;
 	private List<LineItem> items;
 
