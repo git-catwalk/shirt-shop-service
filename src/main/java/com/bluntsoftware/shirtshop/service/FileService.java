@@ -296,4 +296,8 @@ public class FileService {
 
         return folderId;
     }
+
+    public FileItem itemFromPath(String path) throws Exception {
+        return getById(getFolderId(path));
+    }
 }

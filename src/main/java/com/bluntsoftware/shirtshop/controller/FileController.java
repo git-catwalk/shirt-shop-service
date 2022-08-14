@@ -89,6 +89,10 @@ private final FileService fileService;
         ret.put("message","Success, FileId: "+ fileId);
         return ResponseEntity.ok(ret);
     }
+    @PostMapping("/itemFromPath")
+    public ResponseEntity<FileItem> itemFromPath(@RequestParam String path) throws Exception {
+        return ResponseEntity.ok(fileService.itemFromPath(path));
+    }
 
     @GetMapping("/delete/{id}")
     public void delete(@PathVariable String id) throws Exception {
