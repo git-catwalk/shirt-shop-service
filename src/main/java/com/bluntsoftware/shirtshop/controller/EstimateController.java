@@ -58,8 +58,8 @@ public class EstimateController {
     return this.service.search(searchTerm,PageRequest.of(page,limit,sorter));
   }
 
-  @GetMapping(value = "/estimate/{id}/createInvoice",produces = MediaType.APPLICATION_JSON_VALUE)
-  public Invoice createInvoice(@PathVariable("id") String id ){
-    return this.service.createInvoice(id);
+  @GetMapping(value = "/estimate/{id}/createOrder",produces = MediaType.APPLICATION_JSON_VALUE)
+  public Invoice createOrder(@PathVariable("id") String id ){
+    return this.service.createOrder(id);
   }
 }

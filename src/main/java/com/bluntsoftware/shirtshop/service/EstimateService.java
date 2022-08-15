@@ -85,13 +85,13 @@ public class EstimateService{
     quickbooksService.createOrGetEstimate(QBMapper.mapEstimate(estimate));
   }
 
-  public Invoice createInvoice(String id) {
+  public Invoice createOrder(String id) {
     Estimate estimate = findById(id).orElse(null);
     if(estimate != null){
       // todo: has an invoice already been created ?
       Invoice invoice = convertToInvoice(estimate);
       invoice = invoiceService.save(invoice);
-      auditTrailService.audit(" created a new Invoice from estimate " + "EST-" + estimate.getEstimateNumber() +  "for " + estimate.getCustomer().getName(),invoice.getId());
+      auditTrailService.audit(" created a new Order from estimate " + "EST-" + estimate.getEstimateNumber() +  "for " + estimate.getCustomer().getName(),invoice.getId());
       //lock the estimate
       return invoice;
     }
@@ -146,6 +146,7 @@ public class EstimateService{
             .pricingProfile(estimate.getPricingProfile())
             .tags(estimate.getTags())
             .items(estimate.getItems())
+            .notes(estimate.getNotes())
             .build();
   }
 }

@@ -55,5 +55,6 @@ public class Invoice {
 	private List<Label> tags;
 	@Size(min=1,message="at least one line item for the order should exist")
 	private List<LineItem> items;
+	private String notes;
 	private List<CustomerTransaction> transactions;
 }

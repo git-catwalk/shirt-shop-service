@@ -40,6 +40,7 @@ public class Estimate {
 	private BigDecimal depositAmount;
 	private String paymentUrl;
 	private List<Label> tags;
+	private String notes;
 	private PriceProfile pricingProfile;
 	private List<LineItem> items;
 
