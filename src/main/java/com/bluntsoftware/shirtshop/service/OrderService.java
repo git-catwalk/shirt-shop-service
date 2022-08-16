@@ -17,16 +17,8 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
-import java.io.IOException;
 import java.math.BigDecimal;
-import java.security.GeneralSecurityException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -34,21 +26,20 @@ public class OrderService {
     private final OrderRepo repo;
     private final SequenceRepo sequenceRepo;
     private final GarmentStyleRepo garmentStyleRepo;
-    private final StripeService stripeService;
+   // private final StripeService stripeService;
     private final SquareService squareService;
-
+    private final ItemCostingService itemCostingService;
     private static final String INVOICE_SEQUENCE_KEY = "invoice-seq-key";
     private static final String ORDER_SEQUENCE_KEY = "order-seq-key";
 
-    public OrderService(OrderRepo repo, SequenceRepo sequenceRepo, GarmentStyleRepo garmentStyleRepo, StripeService stripeService, SquareService squareService) {
+    public OrderService(OrderRepo repo, SequenceRepo sequenceRepo, GarmentStyleRepo garmentStyleRepo,  SquareService squareService, ItemCostingService itemCostingService) {
         this.repo = repo;
         this.sequenceRepo = sequenceRepo;
         this.garmentStyleRepo = garmentStyleRepo;
-        this.stripeService = stripeService;
+      //  this.stripeService = stripeService;
         this.squareService = squareService;
+        this.itemCostingService = itemCostingService;
     }
-
-
 
     public Invoice save(Invoice item) {
         if(item.getOrderDate() == null){
@@ -67,8 +58,43 @@ public class OrderService {
         String orderStatus = LineItemService.orderStatus(ord);
         ord.setStatus(orderStatus);
         updatePricing(ord);
-
+        //reconcile(ord);
         return repo.save(ord);
+    }
+
+    void reconcile(Invoice order){
+      double total =  itemCostingService.getTotal(order.getItems(),order.getCustomer(),order.getPricingProfile());
+      if(total != order.getAmountDue().doubleValue()){
+          System.out.println("does not reconcile calculated total : " + total + "   set total : " + order.getAmountDue());
+      }
+    }
+
+    public Map<String,Object> report(){
+        Map<String,Object> report = new HashMap<>();
+        report.put("byPrintType",getAllBreakdownByPrintType());
+        report.put("totalSales",totalSales());
+        return report;
+    }
+
+    double totalSales(){
+        return totalSales(repo.findAll());
+    }
+
+    double totalSales(List<Invoice> list){
+       return list.stream()
+               .mapToDouble(o -> o.getAmountDue() != null ? o.getAmountDue().doubleValue() : 0.0)
+               .sum();
+    }
+
+    Map<String,Double> getAllBreakdownByPrintType(){
+        return getBreakdownByPrintType(repo.findAll());
+    }
+
+    Map<String,Double> getBreakdownByPrintType(List<Invoice> list){
+        Map<String,Double> breakdown = new HashMap<>();
+        list.forEach(ord-> ord.getItems()
+                .forEach(li-> itemCostingService.breakDownByPrintType(li,ord.getPricingProfile(),breakdown)));
+        return breakdown;
     }
 
     public void updatePricing(){
@@ -94,8 +120,6 @@ public class OrderService {
             }
         }
     }
-
-
 
     @Transactional
     public Invoice finalizeInvoice(Invoice invoice) throws ValidationException {

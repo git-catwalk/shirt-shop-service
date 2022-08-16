@@ -62,6 +62,7 @@ public class OrderController {
         Sort sorter = StringUtils.isEmpty(sort) ? Sort.unsorted() : Sort.by(Sort.Direction.fromString(sord),sort);
         return this.service.search(searchTerm, PageRequest.of(page,limit,sorter));
     }
+
     @ResponseBody
     @GetMapping(value = {"/fixOrderNumber"}, produces = { "application/json" })
     public Map<String,Object> fixOrderNumber(){
@@ -73,4 +74,10 @@ public class OrderController {
     public ResponseEntity<String> handleValidationException(ValidationException validationException) {
         return new ResponseEntity<>(validationException.getMessage(), HttpStatus.BAD_REQUEST);
     }
+
+    @GetMapping(value = "/report",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String,Object>> report(){
+        return ResponseEntity.ok(this.service.report());
+    }
+
 }
