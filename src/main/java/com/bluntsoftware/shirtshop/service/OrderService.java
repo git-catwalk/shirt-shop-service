@@ -32,7 +32,7 @@ public class OrderService {
     private static final String INVOICE_SEQUENCE_KEY = "invoice-seq-key";
     private static final String ORDER_SEQUENCE_KEY = "order-seq-key";
 
-    public OrderService(OrderRepo repo, SequenceRepo sequenceRepo, GarmentStyleRepo garmentStyleRepo,  SquareService squareService, ItemCostingService itemCostingService) {
+    public OrderService(OrderRepo repo, SequenceRepo sequenceRepo, GarmentStyleRepo garmentStyleRepo,  SquareService squareService,ItemCostingService itemCostingService) {
         this.repo = repo;
         this.sequenceRepo = sequenceRepo;
         this.garmentStyleRepo = garmentStyleRepo;
@@ -86,12 +86,12 @@ public class OrderService {
                .sum();
     }
 
-    Map<String,Double> getAllBreakdownByPrintType(){
+    Map<String,Map<String,Object>> getAllBreakdownByPrintType(){
         return getBreakdownByPrintType(repo.findAll());
     }
 
-    Map<String,Double> getBreakdownByPrintType(List<Invoice> list){
-        Map<String,Double> breakdown = new HashMap<>();
+    Map<String,Map<String,Object>> getBreakdownByPrintType(List<Invoice> list){
+        Map<String,Map<String,Object>> breakdown = new HashMap<>();
         list.forEach(ord-> ord.getItems()
                 .forEach(li-> itemCostingService.breakDownByPrintType(li,ord.getPricingProfile(),breakdown)));
         return breakdown;

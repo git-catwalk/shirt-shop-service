@@ -7,7 +7,6 @@ import com.bluntsoftware.shirtshop.model.PriceProfile;
 import com.bluntsoftware.shirtshop.model.PrintLocation;
 import com.bluntsoftware.shirtshop.model.QtySize;
 import org.springframework.stereotype.Service;
-
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
@@ -15,11 +14,6 @@ import java.util.Map;
 
 @Service
 public class ItemCostingService {
-
-    private final PriceProfile defaultPriceProfile;
-    public ItemCostingService(PriceProfileService priceProfileService) {
-        defaultPriceProfile = priceProfileService.findAll().iterator().next();
-    }
 
     double getTotal(List<LineItem> items,Customer customer,PriceProfile priceProfile){
         return getSubTotal(items,priceProfile) + getTax(items,customer,priceProfile) - getDiscount(items,priceProfile);
@@ -59,34 +53,45 @@ public class ItemCostingService {
     double calculatePricePerGarment(LineItem item,PriceProfile priceProfile){
         double printCosts = 0.0;
 
-        if(item.getCostEa() != null){
+       /* if(item.getCostEa() != null){
             return item.getCostEa().doubleValue();
-        }
+        }*/
 
-        if(priceProfile == null){
+      /*  if(priceProfile == null){
             priceProfile = defaultPriceProfile;
-        }
+        }*/
 
         for(PrintLocation pl :item.getPrintLocations()){
             printCosts += getPrintLocationPrintCost(pl,priceProfile);
         }
 
-        double markup  = priceProfile != null && priceProfile.getGarmentMarkup() != null ? priceProfile.getGarmentMarkup() : 100.00;
+        Double markup  = item.getGarmentMarkupPercentage();
+
+        //priceProfile != null && priceProfile.getGarmentMarkup() != null ? priceProfile.getGarmentMarkup() : 100.00;
         double pricePerGarment =  printCosts +  getCostPerGarment(item,priceProfile)  + (this.getCostPerGarment(item,priceProfile) * (markup/100));
         return Math.round(pricePerGarment * 100) / 100.00;
     }
 
-    public void breakDownByPrintType(LineItem item,PriceProfile priceProfile,Map<String,Double> breakDown){
+    public void breakDownByPrintType(LineItem item,PriceProfile priceProfile,Map<String,Map<String,Object>> breakDown){
+
         if(breakDown == null){
             breakDown = new HashMap<>();
         }
+
         for(PrintLocation pl :item.getPrintLocations()){
-            double plc = getPrintLocationPrintCost(pl,priceProfile) * getGarmentQuantity(item);
             String printType = pl.getPrintType();
+            double plc = getPrintLocationPrintCost(pl,priceProfile) * getGarmentQuantity(item);
+            int qty = getGarmentQuantity(item);
+            Map<String,Object> plInfo = new HashMap<>();
             if(breakDown.containsKey(printType)){
-                plc += breakDown.get(printType);
+                plInfo = breakDown.get(printType);
+                plc += (double)plInfo.get("cost");
+                qty += (int)plInfo.get("qty");
             }
-            breakDown.put(printType,plc);
+            plInfo.put("cost",plc);
+            plInfo.put("qty",qty);
+            plInfo.put("avg",plc/qty);
+            breakDown.put(printType,plInfo);
         }
     }
 
