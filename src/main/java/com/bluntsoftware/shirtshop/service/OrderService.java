@@ -58,7 +58,7 @@ public class OrderService {
         String orderStatus = LineItemService.orderStatus(ord);
         ord.setStatus(orderStatus);
         updatePricing(ord);
-        //reconcile(ord);
+        reconcile(ord);
         return repo.save(ord);
     }
 
@@ -66,6 +66,8 @@ public class OrderService {
       double total =  itemCostingService.getTotal(order.getItems(),order.getCustomer(),order.getPricingProfile());
       if(total != order.getAmountDue().doubleValue()){
           System.out.println("does not reconcile calculated total : " + total + "   set total : " + order.getAmountDue());
+      }else{
+          System.out.println("reconcile passed calculated total : " + total + "   set total : " + order.getAmountDue());
       }
     }
 

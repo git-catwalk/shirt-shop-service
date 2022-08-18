@@ -52,24 +52,70 @@ public class ItemCostingService {
 
     double calculatePricePerGarment(LineItem item,PriceProfile priceProfile){
         double printCosts = 0.0;
-
-       /* if(item.getCostEa() != null){
-            return item.getCostEa().doubleValue();
-        }*/
-
-      /*  if(priceProfile == null){
-            priceProfile = defaultPriceProfile;
-        }*/
-
         for(PrintLocation pl :item.getPrintLocations()){
             printCosts += getPrintLocationPrintCost(pl,priceProfile);
         }
-
         Double markup  = item.getGarmentMarkupPercentage();
-
-        //priceProfile != null && priceProfile.getGarmentMarkup() != null ? priceProfile.getGarmentMarkup() : 100.00;
-        double pricePerGarment =  printCosts +  getCostPerGarment(item,priceProfile)  + (this.getCostPerGarment(item,priceProfile) * (markup/100));
+        double markUpPrice = markup != null ? this.getCostPerGarment(item,priceProfile) * (markup/100) : 0.0;
+        double pricePerGarment =  printCosts +  getCostPerGarment(item,priceProfile)  + markUpPrice;
         return Math.round(pricePerGarment * 100) / 100.00;
+    }
+
+    double getPrintLocationPrintCost(PrintLocation pl,PriceProfile priceProfile){
+        Map<String, Map<String, BigDecimal>> matrix = priceProfile.getMatrix();
+        String printType = null;
+        if(pl != null){
+            printType = pl.getPrintType();
+        }
+        if(printType != null && matrix != null){
+            Map<String, BigDecimal> printTypes = matrix.get(printType);
+            if(printTypes != null){
+                BigDecimal cost = printTypes.get(pl.getPrintTypeProperty());
+                return cost != null ? cost.doubleValue() : 0.0;
+            }
+        }
+        return 0.0;
+    }
+
+    private double getCostPerGarment(LineItem item,PriceProfile priceProfile) {
+        if(this.getGarmentQuantity(item) < 1) return 0.0;
+        return Math.round(this.calculateTotalGarmentCost(item,priceProfile) / this.getGarmentQuantity(item) * 100) / 100.00;
+    }
+
+    private double calculateTotalGarmentCost(LineItem item,PriceProfile priceProfile) {
+        double cost = 0.0;
+        Map<String,QtySize> sizes = item.getSizes();
+        for(QtySize qtySize:sizes.values()){
+           int qty = qtySize.getQty() != null && qtySize.getQty() > 0 ? qtySize.getQty() : 0;
+           cost +=  qtySize.getCustomerPrice() != null ? qtySize.getCustomerPrice().doubleValue() * qty : 0.0;
+        }
+
+        List<NamesNumbers> nameNumberList =item.getNamesNumbers();
+        if(nameNumberList != null){
+            for(NamesNumbers namesNumbers:nameNumberList){
+               int qty = namesNumbers.getQty()!= null && namesNumbers.getQty() > 0 ? namesNumbers.getQty() : 0;
+                cost += namesNumbers.getSize() != null && sizes.containsKey(namesNumbers.getSize()) ? sizes.get(namesNumbers.getSize()).getCustomerPrice().doubleValue() * qty : 0.0;
+            }
+        }
+        return cost;
+    }
+
+    private double calculateTotalGarmentPrice( LineItem item,PriceProfile priceProfile){
+        return this.getGarmentQuantity(item) * this.calculatePricePerGarment(item,priceProfile);
+    }
+
+    int getGarmentQuantity(LineItem lineItem){
+        int garmentQty = 0;
+        for(QtySize qtySize:lineItem.getSizes().values()){
+            garmentQty += qtySize.getQty() != null && qtySize.getQty() > 0 ? qtySize.getQty() : 0;
+        }
+        List<NamesNumbers> nameNumberList =lineItem.getNamesNumbers();
+        if(nameNumberList != null){
+            for(NamesNumbers namesNumbers:nameNumberList){
+                garmentQty += namesNumbers != null && namesNumbers.getQty()!= null && namesNumbers.getQty() > 0 ? namesNumbers.getQty() : 0;
+            }
+        }
+        return garmentQty;
     }
 
     public void breakDownByPrintType(LineItem item,PriceProfile priceProfile,Map<String,Map<String,Object>> breakDown){
@@ -94,44 +140,4 @@ public class ItemCostingService {
             breakDown.put(printType,plInfo);
         }
     }
-
-    double getPrintLocationPrintCost(PrintLocation pl,PriceProfile priceProfile){
-        Map<String, Map<String, BigDecimal>> matrix = priceProfile.getMatrix();
-        if(matrix != null){
-            Map<String, BigDecimal> printTypes = matrix.get(pl.getPrintType());
-            if(printTypes != null){
-                BigDecimal cost = printTypes.get(pl.getPrintTypeProperty());
-                return cost != null ? cost.doubleValue() : 0.0;
-            }
-        }
-        return 0.0;
-    }
-
-    private double getCostPerGarment(LineItem item,PriceProfile priceProfile) {
-        if(this.getGarmentQuantity(item) < 1) return 0.0;
-        return Math.round(this.calculateTotalGarmentCost(item,priceProfile) / this.getGarmentQuantity(item) * 100) / 100.00;
-    }
-
-    private double calculateTotalGarmentCost(LineItem item,PriceProfile priceProfile) {
-        return this.getGarmentQuantity(item) * this.calculatePricePerGarment(item,priceProfile);
-    }
-
-    private double calculateTotalGarmentPrice( LineItem item,PriceProfile priceProfile){
-        return this.getGarmentQuantity(item) * this.calculatePricePerGarment(item,priceProfile);
-    }
-
-    int getGarmentQuantity(LineItem lineItem){
-        int garmentQty = 0;
-        for(QtySize qtySize:lineItem.getSizes().values()){
-            garmentQty += qtySize.getQty() != null && qtySize.getQty() > 0 ? qtySize.getQty() : 0;
-        }
-        List<NamesNumbers> nameNumberList =lineItem.getNamesNumbers();
-        if(nameNumberList != null){
-            for(NamesNumbers namesNumbers:nameNumberList){
-                garmentQty += namesNumbers != null && namesNumbers.getQty()!= null && namesNumbers.getQty() > 0 ? namesNumbers.getQty() : 0;
-            }
-        }
-        return garmentQty;
-    }
-
 }
